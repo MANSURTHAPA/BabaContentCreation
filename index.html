@@ -3,60 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Content Command Post</title>
+<title>Creator Sathi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#1F231C;
-    --panel:#262B20;
-    --panel-border:#3A4030;
-    --paper:#F3EEDF;
-    --paper-border:#DDD3B2;
-    --ink:#2B2717;
-    --ink-soft:#6B6350;
-    --cream:#EDE7D6;
-    --cream-soft:#ABA68F;
-    --brass:#C79A3B;
-    --brass-dark:#9C7726;
-    --crimson:#A6323C;
-    --indigo:#24466B;
-    --leaf:#6B8F3D;
-    --radius:4px;
-    --font-display:'Oswald','Noto Sans Devanagari',sans-serif;
-    --font-body:'Source Sans 3','Noto Sans Devanagari',sans-serif;
-  }
+ :root{
+  --bg:#F5F2E9;
+  --panel:#EFE8D5;
+  --panel-border:#D8CFB8;
+
+  --paper:#FFFFFF;
+  --paper-border:#D8CFB8;
+
+  --ink:#2B2717;
+  --ink-soft:#6B6350;
+
+  --cream:#2B2717;
+  --cream-soft:#706A57;
+
+  --brass:#C79A3B;
+  --brass-dark:#9C7726;
+
+  --crimson:#A6323C;
+  --indigo:#355A80;
+  --leaf:#5D8A42;
+
+  --radius:6px;
+
+  --font-display:'Oswald','Noto Sans Devanagari',sans-serif;
+  --font-body:'Source Sans 3','Noto Sans Devanagari',sans-serif;
+}
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;height:100%;background:var(--bg);}
   body{font-family:var(--font-body);color:var(--cream);-webkit-font-smoothing:antialiased;}
   button,input,select,textarea{font-family:inherit;}
   .app{display:flex;min-height:100vh;}
 
+
+body{
+  font-family:var(--font-body);
+  color:var(--cream);
+  background:
+    linear-gradient(
+      180deg,
+      #f8f7f2,
+      #dfddd4
+    );
+}
   /* Sidebar */
-  .sidebar{
-    width:250px;flex:0 0 250px;background:var(--panel);
-    border-right:1px solid var(--panel-border);
-    display:flex;flex-direction:column;
-    padding:22px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;
-  }
+.sidebar{
+  width:250px;
+  flex:0 0 250px;
+  background:#F0E9D8;
+  border-right:1px solid #D8CFB8;
+}
   .brand{display:flex;align-items:center;gap:12px;margin-bottom:28px;padding:0 4px;}
   .brand-badge{
     width:38px;height:38px;flex:0 0 38px;border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #E2BE66, var(--brass-dark));
+    background:radial-gradient(circle at 35% 30%, #d1c7c3, var(--brass-dark));
     display:flex;align-items:center;justify-content:center;color:#2B2717;font-size:18px;font-weight:700;
     box-shadow:0 0 0 2px var(--panel-border);
   }
-  .brand-title{font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.05em;text-transform:uppercase;color:var(--cream);line-height:1.2;}
-  .brand-sub{font-size:11px;color:var(--cream-soft);letter-spacing:.03em;margin-top:2px;}
+  .brand-title{font-family:var(--font-display);font-weight:700;font-size:20px;letter-spacing:.05em;text-transform:uppercase;color:var(--cream);line-height:1.2;}
+  .brand-sub{font-size:15px;color:var(--cream-soft);letter-spacing:.03em;margin-top:2px;}
 
   .nav{display:flex;flex-direction:column;gap:2px;margin-bottom:20px;}
   .nav-item{
     display:flex;align-items:center;gap:10px;text-align:left;background:none;border:none;
     color:var(--cream-soft);padding:11px 10px;border-radius:var(--radius);cursor:pointer;
-    font-size:13.5px;letter-spacing:.02em;border-left:2px solid transparent;transition:.15s;
+    font-size:15.5px;letter-spacing:.02em;border-left:2px solid transparent;transition:.15s;
   }
   .nav-item:hover{background:rgba(199,154,58,.08);color:var(--cream);}
-  .nav-item.active{background:rgba(199,154,58,.14);color:var(--brass);border-left:2px solid var(--brass);font-weight:600;}
+  .nav-item.active{
+  background:#FFF8E6;
+  color:#8A6420;
+  border-left:4px solid var(--brass);
+  font-weight:600;
+}
   .nav-idx{font-family:var(--font-display);font-size:11px;color:var(--brass-dark);width:20px;flex:0 0 20px;}
   .nav-item.active .nav-idx{color:var(--brass);}
 
@@ -78,10 +101,17 @@
   .panel-title{font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--cream);margin:0 0 6px 0;letter-spacing:.01em;}
   .panel-desc{color:var(--cream-soft);font-size:14.5px;max-width:640px;line-height:1.55;}
 
-  .card{
-    background:var(--paper);color:var(--ink);border:1px solid var(--paper-border);
-    border-radius:6px;padding:24px 26px;margin-bottom:18px;
-  }
+ .card{
+  background:var(--paper);
+  color:var(--ink);
+  border:1px solid var(--paper-border);
+  border-radius:8px;
+  padding:24px 26px;
+  margin-bottom:18px;
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,.05);
+}
   .card h3{font-family:var(--font-display);font-size:15px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink);margin:0 0 14px 0;}
   .field{margin-bottom:16px;}
   .field label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:5px;}
@@ -96,7 +126,7 @@
 
   .btn{
     display:inline-flex;align-items:center;gap:8px;background:var(--brass);color:#241C0C;
-    border:none;padding:11px 20px;border-radius:4px;font-weight:700;font-size:13.5px;
+    border:none;padding:11px 20px;border-radius:6px;font-weight:700;font-size:13.5px;
     letter-spacing:.03em;text-transform:uppercase;cursor:pointer;transition:.15s;
   }
   .btn:hover{background:#DAAE4E;}
@@ -118,8 +148,22 @@
   .loading{color:var(--ink-soft);font-style:italic;font-size:13.5px;}
 
   .idea-card{
-    background:#fff;border:1px solid var(--paper-border);border-radius:4px;padding:14px 16px;margin-top:12px;
-  }
+  background:#fff;
+  border:1px solid var(--paper-border);
+  border-radius:8px;
+  padding:16px 18px;
+  margin-top:12px;
+
+  box-shadow:
+    0 2px 6px rgba(0,0,0,.04);
+
+  transition:.2s;
+}
+
+.idea-card:hover{
+  transform:translateY(-2px);
+}
+
   .idea-card h4{margin:0 0 4px 0;font-size:14.5px;color:var(--ink);}
   .idea-card .tag{display:inline-block;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;background:var(--indigo);color:#fff;padding:2px 8px;border-radius:20px;margin-bottom:6px;}
   .idea-card p{margin:6px 0;font-size:13.5px;color:var(--ink-soft);line-height:1.5;white-space:pre-wrap;}
@@ -161,16 +205,16 @@
     <div class="brand">
       <div class="brand-badge">★</div>
       <div>
-        <div class="brand-title" data-i18n="appTitle">Content Command Post</div>
-        <div class="brand-sub" data-i18n="appSub">Your Facebook creator HQ</div>
+        <div class="brand-title" data-i18n="appTitle">Creator Sathi</div>
+        <div class="brand-sub" data-i18n="appSub">Your Companion for Growing Online</div>
       </div>
     </div>
     <nav class="nav">
       <button class="nav-item active" data-tab="setup"><span class="nav-idx">01</span><span data-i18n="navSetup">Setup</span></button>
-      <button class="nav-item" data-tab="recon"><span class="nav-idx">02</span><span data-i18n="navRecon">Idea Recon</span></button>
-      <button class="nav-item" data-tab="dispatch"><span class="nav-idx">03</span><span data-i18n="navDispatch">Post Dispatch</span></button>
-      <button class="nav-item" data-tab="comms"><span class="nav-idx">04</span><span data-i18n="navComms">Comms</span></button>
-      <button class="nav-item" data-tab="log"><span class="nav-idx">05</span><span data-i18n="navLog">Deployment Log</span></button>
+      <button class="nav-item" data-tab="recon"><span class="nav-idx">02</span><span data-i18n="navRecon">Idea </span></button>
+      <button class="nav-item" data-tab="dispatch"><span class="nav-idx">03</span><span data-i18n="navDispatch">Post Writer</span></button>
+      <button class="nav-item" data-tab="comms"><span class="nav-idx">04</span><span data-i18n="navComms">Comment Reply</span></button>
+      <button class="nav-item" data-tab="log"><span class="nav-idx">05</span><span data-i18n="navLog">Saved Log</span></button>
       <button class="nav-item" data-tab="supply"><span class="nav-idx">06</span><span data-i18n="navSupply">Supply Lines</span></button>
     </nav>
     <div class="lang-toggle">
@@ -255,7 +299,7 @@
     <section id="tab-dispatch" class="panel">
       <div class="panel-head">
         <div class="panel-eyebrow" data-i18n="dispatchEyebrow">Step 03</div>
-        <h1 class="panel-title" data-i18n="dispatchHeading">Post Dispatch</h1>
+        <h1 class="panel-title" data-i18n="dispatchHeading">Post Writer</h1>
         <p class="panel-desc" data-i18n="dispatchDesc">Turn any idea into ready-to-publish copy — hook, body, call-to-action, and hashtags.</p>
       </div>
       <div class="card">
@@ -289,7 +333,7 @@
         <div class="output" id="dispatchOutput"></div>
         <div class="btn-row" id="dispatchActions" style="display:none;">
           <button class="btn secondary small" id="copyDispatchBtn" data-i18n="copyBtn">Copy Text</button>
-          <button class="btn secondary small" id="saveDispatchBtn" data-i18n="saveToLogBtn">Save to Deployment Log</button>
+          <button class="btn secondary small" id="saveDispatchBtn" data-i18n="saveToLogBtn">Save to Saved content</button>
         </div>
       </div>
     </section>
@@ -331,7 +375,7 @@
     <section id="tab-log" class="panel">
       <div class="panel-head">
         <div class="panel-eyebrow" data-i18n="logEyebrow">Step 05</div>
-        <h1 class="panel-title" data-i18n="logHeading">Deployment Log</h1>
+        <h1 class="panel-title" data-i18n="logHeading">Saved content</h1>
         <p class="panel-desc" data-i18n="logDesc">Track every idea and post from first spark to published. Saved on this computer.</p>
       </div>
       <div class="card">
@@ -401,8 +445,8 @@
 <script>
 const translations = {
   en: {
-    appTitle:"Content Command Post", appSub:"Your Facebook creator HQ",
-    navSetup:"Setup", navRecon:"Idea Recon", navDispatch:"Post Dispatch", navComms:"Comms", navLog:"Deployment Log", navSupply:"Supply Lines",
+    appTitle:"Creator Sathi", appSub:"Your Companion for Growing Online",
+    navSetup:"Setup", navRecon:"Content Ideas", navDispatch:"Post Writer", navComms:"Comms", navLog:"Saved content", navSupply:"Supply Lines",
     setupEyebrow:"Step 01", setupHeading:"Set Up Your Command Post",
     setupDesc:"Connect your free OpenRouter account so the tool can think for you. Your key stays saved only on this computer — it is never sent anywhere except OpenRouter.",
     apiKeyLabel:"OpenRouter API Key", apiKeyHelp:"Get a free key at openrouter.ai → Keys. No credit card required for free models.",
@@ -413,14 +457,14 @@ const translations = {
     saveBtn:"Save Settings", testBtn:"Test Connection",
     savedMsg:"Settings saved.", testing:"Testing connection...", testSuccess:"Connected successfully!", testFail:"Connection failed: ",
     errNoKey:"Please add and save your OpenRouter API key in Setup first.",
-    reconEyebrow:"Step 02", reconHeading:"Idea Recon",
+    reconEyebrow:"Step 02", reconHeading:"Ideas",
     reconDesc:"Get a fresh batch of content ideas, grouped into a themed playlist so your posts feel connected — mixing Reels, Stories, and regular posts.",
     reconTopicLabel:"Topic or keyword (optional)", reconTopicPlaceholder:"Leave blank to let it surprise you",
     reconCountLabel:"How many ideas",
     reconFormatLabel:"Focus format", reconFormatAny:"Mix of everything", reconFormatReel:"Reels", reconFormatStory:"FB Stories", reconFormatPost:"Standard Posts",
     reconGenerateBtn:"Generate Ideas", reconLoading:"Scouting for ideas...",
-    addToDispatchBtn:"Send to Post Dispatch", saveToLogBtn:"Save to Deployment Log", savedToLog:"Saved to log.",
-    dispatchEyebrow:"Step 03", dispatchHeading:"Post Dispatch",
+    addToDispatchBtn:"Send to Post Writer", saveToLogBtn:"Save to Saved content", savedToLog:"Saved to log.",
+    dispatchEyebrow:"Step 03", dispatchHeading:"Post Writer",
     dispatchDesc:"Turn any idea into ready-to-publish copy — hook, body, call-to-action, and hashtags.",
     dispatchIdeaLabel:"Your idea or topic", dispatchIdeaPlaceholder:"Describe what you want to post about, or paste an idea from Recon...",
     dispatchToneLabel:"Tone", toneMotivational:"Motivational", toneCasual:"Casual & friendly", toneHumorous:"Light-hearted", toneInformative:"Informative",
@@ -434,7 +478,7 @@ const translations = {
     commsStarterTitle:"Conversation Starters", commsStarterTopicLabel:"Topic (optional)",
     commsStarterPlaceholder:"e.g. discipline, army life, Nepal, family",
     commsStarterBtn:"Generate Questions", commsStarterLoading:"Coming up with questions...",
-    logEyebrow:"Step 05", logHeading:"Deployment Log",
+    logEyebrow:"Step 05", logHeading:"Saved content",
     logDesc:"Track every idea and post from first spark to published. Saved on this computer.",
     logRibbonLabel:"Posted Service Ribbon",
     logEmpty:"Nothing logged yet. Save ideas or posts here as you create them.",
@@ -469,7 +513,7 @@ const translations = {
     "Something went wrong. Please try again."
   },
   np: {
-    appTitle:"सामग्री कमाण्ड पोस्ट", appSub:"तपाईंको फेसबुक क्रिएटर हेडक्वार्टर",
+    appTitle:"क्रिएटर साथी", appSub:"तपाईंको डिजिटल यात्राको साथी",
     navSetup:"स्थापना", navRecon:"विचार खोजी", navDispatch:"पोस्ट लेखन", navComms:"सञ्चार", navLog:"योजना लग", navSupply:"आम्दानी मार्ग",
     setupEyebrow:"चरण ०१", setupHeading:"आफ्नो कमाण्ड पोस्ट स्थापना गर्नुहोस्",
     setupDesc:"यो टुल तपाईंको लागि सोच्न सकोस् भनेर आफ्नो निःशुल्क OpenRouter खाता जोड्नुहोस्। तपाईंको कुञ्जी (key) यही कम्प्युटरमा मात्र सुरक्षित रहन्छ — OpenRouter बाहेक कतै पनि पठाइँदैन।",
