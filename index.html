@@ -449,7 +449,24 @@ const translations = {
     supplyNote:"Eligibility numbers (followers, watch-minutes, region availability) change and vary by country. Always check your own Meta Professional Dashboard for the current requirements before planning around a specific number.",
     advisorHeading:"Get Personalized Advice", advisorLabel:"Describe your content style, posting frequency, and rough audience size",
     advisorPlaceholder:"e.g. I post 3 times a week, mostly short videos about discipline and motivation, and I have around 400 followers so far.",
-    advisorBtn:"Get Advice", advisorLoading:"Reviewing your situation..."
+    advisorBtn:"Get Advice", advisorLoading:"Reviewing your situation...",
+    errRateLimit:
+    "Today's free AI limit has been reached. Please try again tomorrow.",
+
+    errInvalidKey:
+    "Invalid API key. Please check your OpenRouter key.",
+
+    errConnection:
+    "Unable to connect to OpenRouter. Check your internet connection.",
+
+    errNoResponse:
+    "The AI did not return a response. Please try again.",
+
+    errServer:
+    "The AI service is having problems right now. Please try again later.",
+
+    errGeneric:
+    "Something went wrong. Please try again."
   },
   np: {
     appTitle:"सामग्री कमाण्ड पोस्ट", appSub:"तपाईंको फेसबुक क्रिएटर हेडक्वार्टर",
@@ -500,7 +517,25 @@ const translations = {
     supplyNote:"योग्यताका संख्याहरू (फलोअर, वाच-मिनेट, क्षेत्र उपलब्धता) परिवर्तन हुन्छन् र देशअनुसार फरक हुन्छन्। कुनै निश्चित संख्यामा भर परी योजना बनाउनुअघि सधैं आफ्नो Meta Professional Dashboard मा हालको आवश्यकता जाँच्नुहोस्।",
     advisorHeading:"व्यक्तिगत सल्लाह लिनुहोस्", advisorLabel:"आफ्नो सामग्री शैली, पोस्ट गर्ने दर, र अनुमानित दर्शक संख्या वर्णन गर्नुहोस्",
     advisorPlaceholder:"जस्तै: म हप्तामा ३ पटक पोस्ट गर्छु, प्रायः अनुशासन र प्रेरणाका बारे छोटो भिडियोहरू, र मसँग हालसम्म करिब ४०० फलोअर छन्।",
-    advisorBtn:"सल्लाह लिनुहोस्", advisorLoading:"तपाईंको अवस्था हेर्दै..."
+    advisorBtn:"सल्लाह लिनुहोस्", advisorLoading:"तपाईंको अवस्था हेर्दै...",
+    errRateLimit:
+  "आजको निःशुल्क AI सीमा सकिएको छ। कृपया भोलि फेरि प्रयास गर्नुहोस्।",
+
+    errInvalidKey:
+    "API कुञ्जी मान्य छैन। कृपया आफ्नो OpenRouter कुञ्जी जाँच गर्नुहोस्।",
+
+    errConnection:
+    "OpenRouter सँग जडान हुन सकेन। कृपया इन्टरनेट जाँच गर्नुहोस्।",
+
+    errNoResponse:
+    "AI बाट कुनै उत्तर प्राप्त भएन। कृपया फेरि प्रयास गर्नुहोस्।",
+
+    errServer:
+    "AI सेवा अहिले समस्यामा छ। कृपया केही समयपछि प्रयास गर्नुहोस्।",
+
+    errGeneric:
+    "केही समस्या भयो। कृपया फेरि प्रयास गर्नुहोस्।"
+
   }
 };
 
@@ -558,6 +593,33 @@ function langInstruction(){
 }
 function aboutContext(){
   return settings.about ? ('Context about the creator: ' + settings.about) : 'No extra context was given about the creator — keep suggestions broadly applicable to a beginner Facebook creator.';
+}
+function getFriendlyError(error){
+
+  const msg =
+    String(error.message || error);
+
+  if(msg.includes('429')){
+    return t('errRateLimit');
+  }
+
+  if(msg.includes('401')){
+    return t('errInvalidKey');
+  }
+
+  if(msg.includes('Failed to fetch')){
+    return t('errConnection');
+  }
+
+  if(msg.includes('No content returned')){
+    return t('errNoResponse');
+  }
+
+  if(msg.includes('500')){
+    return t('errServer');
+  }
+
+  return t('errGeneric');
 }
 
 async function callOpenRouter(systemPrompt, userPrompt){
@@ -618,7 +680,7 @@ function initSetupTab(){
       await callOpenRouter('You are a helpful assistant.', 'Say hello in one short sentence.');
       setStatus(statusEl, t('testSuccess'), 'ok');
     }catch(e){
-      setStatus(statusEl, t('testFail') + e.message, 'err');
+      setStatus(statusEl, t('testFail') + getFriendlyError(e), 'err');
     }
   });
 }
@@ -644,7 +706,7 @@ function initReconTab(){
       renderReconResults(content);
       setStatus(statusEl, '', '');
     }catch(e){
-      setStatus(statusEl, e.message, 'err');
+      setStatus(statusEl, getFriendlyError(e), 'err');
     }
     btn.disabled = false;
   });
@@ -760,7 +822,7 @@ function initDispatchTab(){
       document.getElementById('dispatchActions').style.display='flex';
       setStatus(statusEl, '', '');
     }catch(e){
-      setStatus(statusEl, e.message, 'err');
+      setStatus(statusEl, getFriendlyError(e), 'err');
     }
     btn.disabled = false;
   });
@@ -804,7 +866,7 @@ function initCommsTab(){
       const content = await callOpenRouter(sys, usr);
       outputEl.textContent = content;
       setStatus(statusEl, '', '');
-    }catch(e){ setStatus(statusEl, e.message, 'err'); }
+    }catch(e){ setStatus(statusEl, getFriendlyError(e), 'err'); }
     btn.disabled = false;
   });
 
@@ -822,7 +884,7 @@ function initCommsTab(){
       const content = await callOpenRouter(sys, usr);
       outputEl.textContent = content;
       setStatus(statusEl, '', '');
-    }catch(e){ setStatus(statusEl, e.message, 'err'); }
+    }catch(e){ setStatus(statusEl, getFriendlyError(e), 'err'); }
     btn.disabled = false;
   });
 }
@@ -927,7 +989,7 @@ function initSupplyTab(){
       const content = await callOpenRouter(sys, usr);
       outputEl.textContent = content;
       setStatus(statusEl, '', '');
-    }catch(e){ setStatus(statusEl, e.message, 'err'); }
+    }catch(e){ setStatus(statusEl, getFriendlyError(e), 'err'); }
     btn.disabled = false;
   });
 }
