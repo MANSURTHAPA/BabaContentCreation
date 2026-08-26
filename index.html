@@ -650,10 +650,21 @@ function initReconTab(){
   });
 }
 
+
+
 function renderReconResults(raw){
+
+  console.log("RAW RESPONSE:");
+  console.log(raw);
   const resultsEl = document.getElementById('reconResults');
   resultsEl.innerHTML='';
-  const blocks = raw.split(/\\n\\s*\\n/).map(b=>b.trim()).filter(Boolean);
+  const blocks =
+  raw.match(
+    /TITLE:[\s\S]*?(?=TITLE:|$)/gi
+  ) || [];
+  console.log("BLOCK COUNT:", blocks.length);
+console.log(blocks);
+
   if(blocks.length <= 1){
     const div = document.createElement('div');
     div.className='output';
@@ -662,21 +673,44 @@ function renderReconResults(raw){
     return;
   }
   blocks.forEach(block=>{
-    const titleM = block.match(/TITLE:\\s*(.+)/i);
-    const formatM = block.match(/FORMAT:\\s*(.+)/i);
-    const hookM = block.match(/HOOK:\\s*(.+)/i);
-    const whatM = block.match(/WHAT TO DO:\\s*([\\s\\S]+)/i);
+    const titleM = block.match(
+    /TITLE:\s*([^\n\r]+)/i
+    );
+
+    const formatM = block.match(
+    /FORMAT:\s*([^\n\r]+)/i
+    );
+
+    const hookM = block.match(
+    /HOOK:\s*([^\n\r]+)/i
+    );
+
+    const whatM = block.match(
+    /WHAT TO DO:\s*([\s\S]*?)(?:\n---|$)/i
+    );
+
+    
     const card = document.createElement('div');
     card.className='idea-card';
     const title = titleM ? titleM[1].trim() : block.slice(0,60);
     const format = formatM ? formatM[1].trim() : '';
     const hook = hookM ? hookM[1].trim() : '';
     const what = whatM ? whatM[1].trim() : '';
-    card.innerHTML = '<span class="tag">'+ (format||'') +'</span><h4></h4><p></p><p></p>';
-    card.querySelector('h4').textContent = title;
-    const ps = card.querySelectorAll('p');
-    ps[0].textContent = hook;
-    ps[1].textContent = what;
+    card.innerHTML =
+'<span class="tag">'+ (format || '') +'</span>' +
+'<p><strong>TITLE</strong></p>' +
+'<h4 class="idea-title"></h4>' +
+'<p><strong>HOOK</strong></p>' +
+'<p class="idea-hook"></p>' +
+'<p><strong>WHAT TO DO</strong></p>' +
+'<p class="idea-what"></p>';
+  
+    card.querySelector('.idea-title').textContent = title;
+
+    card.querySelector('.idea-hook').textContent = hook;
+
+    card.querySelector('.idea-what').textContent = what;
+
     const btnRow = document.createElement('div');
     btnRow.className='btn-row';
     const sendBtn = document.createElement('button');
