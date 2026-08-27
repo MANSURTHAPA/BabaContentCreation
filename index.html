@@ -7,56 +7,38 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
- :root{
-  --bg:#F5F2E9;
-  --panel:#EFE8D5;
-  --panel-border:#D8CFB8;
-
-  --paper:#FFFFFF;
-  --paper-border:#D8CFB8;
-
-  --ink:#2B2717;
-  --ink-soft:#6B6350;
-
-  --cream:#2B2717;
-  --cream-soft:#706A57;
-
-  --brass:#C79A3B;
-  --brass-dark:#9C7726;
-
-  --crimson:#A6323C;
-  --indigo:#355A80;
-  --leaf:#5D8A42;
-
-  --radius:6px;
-
-  --font-display:'Oswald','Noto Sans Devanagari',sans-serif;
-  --font-body:'Source Sans 3','Noto Sans Devanagari',sans-serif;
-}
+  :root{
+    --bg:#F5F2E9;
+    --panel:#EFE8D5;
+    --panel-border:#D8CFB8;
+    --paper:#FFFFFF;
+    --paper-border:#D8CFB8;
+    --ink:#2B2717;
+    --ink-soft:#6B6350;
+    --cream:#2B2717;
+    --cream-soft:#706A57;
+    --brass:#C79A3B;
+    --brass-dark:#9C7726;
+    --crimson:#A6323C;
+    --indigo:#355A80;
+    --leaf:#5D8A42;
+    --radius:6px;
+    --font-display:'Oswald','Noto Sans Devanagari',sans-serif;
+    --font-body:'Source Sans 3','Noto Sans Devanagari',sans-serif;
+  }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;height:100%;background:var(--bg);}
-  body{font-family:var(--font-body);color:var(--cream);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--font-body);color:var(--cream);-webkit-font-smoothing:antialiased;
+    background:linear-gradient(180deg,#f8f7f2,#dfddd4);}
   button,input,select,textarea{font-family:inherit;}
   .app{display:flex;min-height:100vh;}
 
-
-body{
-  font-family:var(--font-body);
-  color:var(--cream);
-  background:
-    linear-gradient(
-      180deg,
-      #f8f7f2,
-      #dfddd4
-    );
-}
-  /* Sidebar */
-.sidebar{
-  width:250px;
-  flex:0 0 250px;
-  background:#F0E9D8;
-  border-right:1px solid #D8CFB8;
-}
+  .sidebar{
+    width:250px;flex:0 0 250px;background:#F0E9D8;
+    border-right:1px solid var(--panel-border);
+    display:flex;flex-direction:column;
+    padding:22px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;
+  }
   .brand{display:flex;align-items:center;gap:12px;margin-bottom:28px;padding:0 4px;}
   .brand-badge{
     width:38px;height:38px;flex:0 0 38px;border-radius:50%;
@@ -64,22 +46,17 @@ body{
     display:flex;align-items:center;justify-content:center;color:#2B2717;font-size:18px;font-weight:700;
     box-shadow:0 0 0 2px var(--panel-border);
   }
-  .brand-title{font-family:var(--font-display);font-weight:700;font-size:20px;letter-spacing:.05em;text-transform:uppercase;color:var(--cream);line-height:1.2;}
-  .brand-sub{font-size:15px;color:var(--cream-soft);letter-spacing:.03em;margin-top:2px;}
+  .brand-title{font-family:var(--font-display);font-weight:700;font-size:19px;letter-spacing:.05em;text-transform:uppercase;color:var(--cream);line-height:1.2;}
+  .brand-sub{font-size:12.5px;color:var(--cream-soft);letter-spacing:.03em;margin-top:2px;}
 
   .nav{display:flex;flex-direction:column;gap:2px;margin-bottom:20px;}
   .nav-item{
     display:flex;align-items:center;gap:10px;text-align:left;background:none;border:none;
     color:var(--cream-soft);padding:11px 10px;border-radius:var(--radius);cursor:pointer;
-    font-size:15.5px;letter-spacing:.02em;border-left:2px solid transparent;transition:.15s;
+    font-size:14.5px;letter-spacing:.02em;border-left:2px solid transparent;transition:.15s;
   }
-  .nav-item:hover{background:rgba(199,154,58,.08);color:var(--cream);}
-  .nav-item.active{
-  background:#FFF8E6;
-  color:#8A6420;
-  border-left:4px solid var(--brass);
-  font-weight:600;
-}
+  .nav-item:hover{background:rgba(199,154,58,.1);color:var(--cream);}
+  .nav-item.active{background:#FFF8E6;color:#8A6420;border-left:4px solid var(--brass);font-weight:600;}
   .nav-idx{font-family:var(--font-display);font-size:11px;color:var(--brass-dark);width:20px;flex:0 0 20px;}
   .nav-item.active .nav-idx{color:var(--brass);}
 
@@ -90,28 +67,23 @@ body{
   }
   .lang-btn.active{background:var(--brass);border-color:var(--brass);color:#241C0C;}
 
-  /* Main */
   .main{flex:1;padding:34px 40px;max-width:980px;}
   .panel{display:none;}
   .panel.active{display:block;animation:fade .25s ease;}
   @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+  @keyframes flashHighlight{0%{box-shadow:0 0 0 3px rgba(199,154,58,.9);}100%{box-shadow:0 0 0 0 rgba(199,154,58,0);}}
+  .flash{animation:flashHighlight 1.4s ease;}
 
   .panel-head{margin-bottom:22px;}
   .panel-eyebrow{font-family:var(--font-display);font-size:11px;letter-spacing:.14em;color:var(--brass);text-transform:uppercase;margin-bottom:6px;}
   .panel-title{font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--cream);margin:0 0 6px 0;letter-spacing:.01em;}
   .panel-desc{color:var(--cream-soft);font-size:14.5px;max-width:640px;line-height:1.55;}
 
- .card{
-  background:var(--paper);
-  color:var(--ink);
-  border:1px solid var(--paper-border);
-  border-radius:8px;
-  padding:24px 26px;
-  margin-bottom:18px;
-
-  box-shadow:
-    0 2px 8px rgba(0,0,0,.05);
-}
+  .card{
+    background:var(--paper);color:var(--ink);border:1px solid var(--paper-border);
+    border-radius:8px;padding:24px 26px;margin-bottom:18px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+  }
   .card h3{font-family:var(--font-display);font-size:15px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink);margin:0 0 14px 0;}
   .field{margin-bottom:16px;}
   .field label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:5px;}
@@ -134,6 +106,7 @@ body{
   .btn.secondary{background:transparent;border:1px solid var(--paper-border);color:var(--ink);text-transform:none;font-weight:600;letter-spacing:0;padding:9px 16px;}
   .btn.secondary:hover{background:#EAE3CD;}
   .btn.small{padding:7px 12px;font-size:12px;}
+  .btn.primary-small{padding:8px 14px;font-size:12px;}
   .btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px;}
 
   .status-msg{font-size:13px;margin-top:10px;}
@@ -145,30 +118,24 @@ body{
     padding:16px;font-size:14.5px;line-height:1.65;color:var(--ink);margin-top:14px;min-height:40px;
   }
   .output:empty{display:none;}
-  .loading{color:var(--ink-soft);font-style:italic;font-size:13.5px;}
 
   .idea-card{
-  background:#fff;
-  border:1px solid var(--paper-border);
-  border-radius:8px;
-  padding:16px 18px;
-  margin-top:12px;
-
-  box-shadow:
-    0 2px 6px rgba(0,0,0,.04);
-
-  transition:.2s;
-}
-
-.idea-card:hover{
-  transform:translateY(-2px);
-}
-
+    background:#fff;border:1px solid var(--paper-border);border-radius:8px;padding:16px 18px;margin-top:12px;
+    box-shadow:0 2px 6px rgba(0,0,0,.04);transition:.2s;
+  }
+  .idea-card:hover{transform:translateY(-2px);}
   .idea-card h4{margin:0 0 4px 0;font-size:14.5px;color:var(--ink);}
   .idea-card .tag{display:inline-block;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;background:var(--indigo);color:#fff;padding:2px 8px;border-radius:20px;margin-bottom:6px;}
-  .idea-card p{margin:6px 0;font-size:13.5px;color:var(--ink-soft);line-height:1.5;white-space:pre-wrap;}
+  .idea-card .field-label{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--brass-dark);margin:8px 0 2px 0;}
+  .idea-card p{margin:2px 0 0 0;font-size:13.5px;color:var(--ink-soft);line-height:1.5;white-space:pre-wrap;}
 
-  /* Ribbon */
+  .link-banner{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:#FFF8E6;border:1px solid var(--paper-border);border-left:4px solid var(--indigo);
+    padding:10px 14px;border-radius:4px;font-size:13px;color:var(--ink);margin-bottom:14px;
+  }
+  .link-banner button{background:none;border:none;color:var(--ink-soft);cursor:pointer;font-size:15px;line-height:1;}
+
   .ribbon-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:10px 0 4px 0;}
   .ribbon-chip{
     width:20px;height:24px;background:linear-gradient(180deg,#E2BE66,var(--brass-dark));
@@ -186,7 +153,7 @@ body{
   .monetize-item{background:#fff;border:1px solid var(--paper-border);border-radius:4px;padding:16px;}
   .monetize-item h4{margin:0 0 8px 0;font-family:var(--font-display);font-size:14px;color:var(--indigo);text-transform:uppercase;letter-spacing:.03em;}
   .monetize-item p{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink-soft);}
-  .note-box{background:#EFE7CC;border:1px solid var(--paper-border);border-left:4px solid var(--brass);padding:12px 14px;border-radius:4px;font-size:13px;color:var(--ink-soft);margin-top:16px;line-height:1.5;}
+  .note-box{background:#FFF8E6;border:1px solid var(--paper-border);border-left:4px solid var(--brass);padding:12px 14px;border-radius:4px;font-size:13px;color:var(--ink-soft);margin-top:16px;line-height:1.5;}
 
   @media(max-width:820px){
     .app{flex-direction:column;}
@@ -211,11 +178,12 @@ body{
     </div>
     <nav class="nav">
       <button class="nav-item active" data-tab="setup"><span class="nav-idx">01</span><span data-i18n="navSetup">Setup</span></button>
-      <button class="nav-item" data-tab="recon"><span class="nav-idx">02</span><span data-i18n="navRecon">Idea </span></button>
+      <button class="nav-item" data-tab="recon"><span class="nav-idx">02</span><span data-i18n="navRecon">Idea</span></button>
       <button class="nav-item" data-tab="dispatch"><span class="nav-idx">03</span><span data-i18n="navDispatch">Post Writer</span></button>
       <button class="nav-item" data-tab="comms"><span class="nav-idx">04</span><span data-i18n="navComms">Comment Reply</span></button>
       <button class="nav-item" data-tab="log"><span class="nav-idx">05</span><span data-i18n="navLog">Saved Log</span></button>
       <button class="nav-item" data-tab="supply"><span class="nav-idx">06</span><span data-i18n="navSupply">Supply Lines</span></button>
+      <button class="nav-item" data-tab="live"><span class="nav-idx">07</span><span data-i18n="navLive">Go Live</span></button>
     </nav>
     <div class="lang-toggle">
       <button class="lang-btn active" id="langEn">EN</button>
@@ -225,12 +193,11 @@ body{
 
   <main class="main">
 
-    <!-- SETUP -->
     <section id="tab-setup" class="panel active">
       <div class="panel-head">
         <div class="panel-eyebrow" data-i18n="setupEyebrow">Step 01</div>
         <h1 class="panel-title" data-i18n="setupHeading">Set Up Your Command Post</h1>
-        <p class="panel-desc" data-i18n="setupDesc">Connect your free OpenRouter account so the tool can think for you. Your key stays saved only on this computer — it is never sent anywhere except OpenRouter.</p>
+        <p class="panel-desc" data-i18n="setupDesc">Connect your free OpenRouter account so the tool can think for you. Your key stays saved only on this computer.</p>
       </div>
       <div class="card">
         <h3 data-i18n="apiKeyLabel">OpenRouter API Key</h3>
@@ -245,7 +212,7 @@ body{
         </div>
         <div class="field">
           <label data-i18n="aboutLabel">About You &amp; Your Page (optional, but helps a lot)</label>
-          <textarea id="aboutInput" data-i18n-placeholder="aboutPlaceholder" placeholder="e.g. Retired from the Nepali Army. I want to share life lessons, discipline, family life, and everyday moments with my community. My audience is mostly Nepali adults."></textarea>
+          <textarea id="aboutInput" data-i18n-placeholder="aboutPlaceholder" placeholder="e.g. Retired from the Nepali Army. I want to share life lessons, discipline, family life, and everyday moments."></textarea>
           <div class="help" data-i18n="aboutHelp">This is used to personalize every idea, post, and reply the tool generates for you.</div>
         </div>
         <div class="btn-row">
@@ -256,12 +223,11 @@ body{
       </div>
     </section>
 
-    <!-- RECON -->
     <section id="tab-recon" class="panel">
       <div class="panel-head">
         <div class="panel-eyebrow" data-i18n="reconEyebrow">Step 02</div>
         <h1 class="panel-title" data-i18n="reconHeading">Idea Recon</h1>
-        <p class="panel-desc" data-i18n="reconDesc">Get a fresh batch of content ideas, grouped into a themed playlist so your posts feel connected — mixing Reels, Stories, and regular posts.</p>
+        <p class="panel-desc" data-i18n="reconDesc">Get a fresh batch of content ideas, grouped into a themed playlist, mixing Reels, Stories, and regular posts.</p>
       </div>
       <div class="card">
         <div class="row">
@@ -295,17 +261,20 @@ body{
       </div>
     </section>
 
-    <!-- DISPATCH -->
     <section id="tab-dispatch" class="panel">
       <div class="panel-head">
         <div class="panel-eyebrow" data-i18n="dispatchEyebrow">Step 03</div>
         <h1 class="panel-title" data-i18n="dispatchHeading">Post Writer</h1>
-        <p class="panel-desc" data-i18n="dispatchDesc">Turn any idea into ready-to-publish copy — hook, body, call-to-action, and hashtags.</p>
+        <p class="panel-desc" data-i18n="dispatchDesc">Turn any idea into ready-to-publish copy: hook, caption, what photo or video to use, and hashtags.</p>
       </div>
       <div class="card">
+        <div class="link-banner" id="dispatchLinkBanner" style="display:none;">
+          <span id="dispatchLinkText"></span>
+          <button id="dispatchLinkDismiss">✕</button>
+        </div>
         <div class="field">
           <label data-i18n="dispatchIdeaLabel">Your idea or topic</label>
-          <textarea id="dispatchIdea" data-i18n-placeholder="dispatchIdeaPlaceholder" placeholder="Describe what you want to post about, or paste an idea from Recon..."></textarea>
+          <textarea id="dispatchIdea" data-i18n-placeholder="dispatchIdeaPlaceholder" placeholder="Describe what you want to post about, or send one over from Idea Recon..."></textarea>
         </div>
         <div class="row">
           <div class="field">
@@ -333,16 +302,15 @@ body{
         <div class="output" id="dispatchOutput"></div>
         <div class="btn-row" id="dispatchActions" style="display:none;">
           <button class="btn secondary small" id="copyDispatchBtn" data-i18n="copyBtn">Copy Text</button>
-          <button class="btn secondary small" id="saveDispatchBtn" data-i18n="saveToLogBtn">Save to Saved content</button>
+          <button class="btn secondary small" id="saveDispatchBtn" data-i18n="saveToLogBtn">Save to Saved Log</button>
         </div>
       </div>
     </section>
 
-    <!-- COMMS -->
     <section id="tab-comms" class="panel">
       <div class="panel-head">
         <div class="panel-eyebrow" data-i18n="commsEyebrow">Step 04</div>
-        <h1 class="panel-title" data-i18n="commsHeading">Comms — Engagement Helper</h1>
+        <h1 class="panel-title" data-i18n="commsHeading">Comment Reply Helper</h1>
         <p class="panel-desc" data-i18n="commsDesc">Reply to your community with warmth, and give them reasons to keep talking.</p>
       </div>
       <div class="card">
@@ -371,11 +339,10 @@ body{
       </div>
     </section>
 
-    <!-- LOG -->
     <section id="tab-log" class="panel">
       <div class="panel-head">
         <div class="panel-eyebrow" data-i18n="logEyebrow">Step 05</div>
-        <h1 class="panel-title" data-i18n="logHeading">Saved content</h1>
+        <h1 class="panel-title" data-i18n="logHeading">Saved Log</h1>
         <p class="panel-desc" data-i18n="logDesc">Track every idea and post from first spark to published. Saved on this computer.</p>
       </div>
       <div class="card">
@@ -397,7 +364,6 @@ body{
       </div>
     </section>
 
-    <!-- SUPPLY -->
     <section id="tab-supply" class="panel">
       <div class="panel-head">
         <div class="panel-eyebrow" data-i18n="supplyEyebrow">Step 06</div>
@@ -412,7 +378,7 @@ body{
           </div>
           <div class="monetize-item">
             <h4 data-i18n="supplyStarsTitle">Facebook Stars</h4>
-            <p data-i18n="supplyStarsDesc">Viewers send paid Stars during live videos or on posts as a form of tipping, and you get a share of their value. Eligibility is shown in your dashboard once you're set up as a creator.</p>
+            <p data-i18n="supplyStarsDesc">Viewers send paid Stars during live videos or on posts as a form of tipping, and you get a share of their value. Eligibility is shown in your dashboard once you are set up as a creator.</p>
           </div>
           <div class="monetize-item">
             <h4 data-i18n="supplySubsTitle">Fan Subscriptions</h4>
@@ -420,10 +386,10 @@ body{
           </div>
           <div class="monetize-item">
             <h4 data-i18n="supplyBrandTitle">Brand Partnerships</h4>
-            <p data-i18n="supplyBrandDesc">Companies pay you to feature their product, disclosed using Meta's branded content tools. This is often the most accessible path early on, since it depends on trust and engagement rather than Meta's payout thresholds.</p>
+            <p data-i18n="supplyBrandDesc">Companies pay you to feature their product, disclosed using Meta's branded content tools. Often the most accessible path early on, since it depends on trust and engagement rather than Meta's payout thresholds.</p>
           </div>
         </div>
-        <div class="note-box" data-i18n="supplyNote">Eligibility numbers (followers, watch-minutes, region availability) change and vary by country. Always check your own Meta Professional Dashboard for the current requirements before planning around a specific number.</div>
+        <div class="note-box" data-i18n="supplyNote">Eligibility numbers (followers, watch-minutes, region availability) change and vary by country. Always check your own Meta Professional Dashboard for the current requirements.</div>
       </div>
       <div class="card">
         <h3 data-i18n="advisorHeading">Get Personalized Advice</h3>
@@ -439,6 +405,53 @@ body{
       </div>
     </section>
 
+    <section id="tab-live" class="panel">
+      <div class="panel-head">
+        <div class="panel-eyebrow" data-i18n="liveEyebrow">Step 07</div>
+        <h1 class="panel-title" data-i18n="liveHeading">Go Live</h1>
+        <p class="panel-desc" data-i18n="liveDesc">Plan a proper Facebook Live: what to set up beforehand, and a ready script to guide you while you're on camera.</p>
+      </div>
+      <div class="card">
+        <h3 data-i18n="liveChecklistTitle">Before You Go Live</h3>
+        <ul id="liveChecklistList" style="margin:0;padding-left:20px;font-size:13.5px;color:var(--ink-soft);line-height:1.9;"></ul>
+      </div>
+      <div class="card">
+        <h3 data-i18n="liveScriptCardTitle">Live Idea &amp; Script</h3>
+        <div class="field">
+          <label data-i18n="liveTopicLabel">What is this Live about? (optional)</label>
+          <input type="text" id="liveTopic" data-i18n-placeholder="liveTopicPlaceholder" placeholder="Leave blank to let it suggest a topic">
+        </div>
+        <div class="row">
+          <div class="field">
+            <label data-i18n="liveDurationLabel">How long will you go live?</label>
+            <select id="liveDuration">
+              <option value="short" data-i18n="liveDurationShort">10-15 minutes</option>
+              <option value="medium" selected data-i18n="liveDurationMedium">15-30 minutes</option>
+              <option value="long" data-i18n="liveDurationLong">30+ minutes</option>
+            </select>
+          </div>
+          <div class="field">
+            <label data-i18n="dispatchToneLabel">Tone</label>
+            <select id="liveTone">
+              <option value="motivational" data-i18n="toneMotivational">Motivational</option>
+              <option value="casual" selected data-i18n="toneCasual">Casual &amp; friendly</option>
+              <option value="humorous" data-i18n="toneHumorous">Light-hearted</option>
+              <option value="informative" data-i18n="toneInformative">Informative</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn" id="liveGenerateBtn" data-i18n="liveGenerateBtn">Generate Live Script</button>
+        </div>
+        <div class="status-msg" id="liveStatus"></div>
+        <div class="output" id="liveOutput"></div>
+        <div class="btn-row" id="liveActions" style="display:none;">
+          <button class="btn secondary small" id="copyLiveBtn" data-i18n="copyBtn">Copy Text</button>
+          <button class="btn secondary small" id="saveLiveBtn" data-i18n="saveToLogBtn">Save to Saved Log</button>
+        </div>
+      </div>
+    </section>
+
   </main>
 </div>
 
@@ -446,31 +459,32 @@ body{
 const translations = {
   en: {
     appTitle:"Creator Sathi", appSub:"Your Companion for Growing Online",
-    navSetup:"Setup", navRecon:"Content Ideas", navDispatch:"Post Writer", navComms:"Comms", navLog:"Saved content", navSupply:"Supply Lines",
+    navSetup:"Setup", navRecon:"Idea", navDispatch:"Post Writer", navComms:"Comment Reply", navLog:"Saved Log", navSupply:"Supply Lines",
     setupEyebrow:"Step 01", setupHeading:"Set Up Your Command Post",
-    setupDesc:"Connect your free OpenRouter account so the tool can think for you. Your key stays saved only on this computer — it is never sent anywhere except OpenRouter.",
+    setupDesc:"Connect your free OpenRouter account so the tool can think for you. Your key stays saved only on this computer.",
     apiKeyLabel:"OpenRouter API Key", apiKeyHelp:"Get a free key at openrouter.ai → Keys. No credit card required for free models.",
     modelLabel:"Model", modelHelp:"\"openrouter/free\" auto-picks a free model for you. To choose a specific free model instead, copy its name (ending in :free) from openrouter.ai/models.",
     aboutLabel:"About You & Your Page (optional, but helps a lot)",
-    aboutPlaceholder:"e.g. Retired from the Nepali Army. I want to share life lessons, discipline, family life, and everyday moments with my community. My audience is mostly Nepali adults.",
+    aboutPlaceholder:"e.g. Retired from the Nepali Army. I want to share life lessons, discipline, family life, and everyday moments.",
     aboutHelp:"This is used to personalize every idea, post, and reply the tool generates for you.",
     saveBtn:"Save Settings", testBtn:"Test Connection",
     savedMsg:"Settings saved.", testing:"Testing connection...", testSuccess:"Connected successfully!", testFail:"Connection failed: ",
     errNoKey:"Please add and save your OpenRouter API key in Setup first.",
-    reconEyebrow:"Step 02", reconHeading:"Ideas",
-    reconDesc:"Get a fresh batch of content ideas, grouped into a themed playlist so your posts feel connected — mixing Reels, Stories, and regular posts.",
+    reconEyebrow:"Step 02", reconHeading:"Idea Recon",
+    reconDesc:"Get a fresh batch of content ideas, grouped into a themed playlist, mixing Reels, Stories, and regular posts.",
     reconTopicLabel:"Topic or keyword (optional)", reconTopicPlaceholder:"Leave blank to let it surprise you",
     reconCountLabel:"How many ideas",
     reconFormatLabel:"Focus format", reconFormatAny:"Mix of everything", reconFormatReel:"Reels", reconFormatStory:"FB Stories", reconFormatPost:"Standard Posts",
     reconGenerateBtn:"Generate Ideas", reconLoading:"Scouting for ideas...",
-    addToDispatchBtn:"Send to Post Writer", saveToLogBtn:"Save to Saved content", savedToLog:"Saved to log.",
+    addToDispatchBtn:"+ Add to Post Writer", saveToLogBtn:"Save to Saved Log", savedToLog:"Saved to log.",
+    linkedFromRecon:"Loaded from Idea Recon: ",
     dispatchEyebrow:"Step 03", dispatchHeading:"Post Writer",
-    dispatchDesc:"Turn any idea into ready-to-publish copy — hook, body, call-to-action, and hashtags.",
-    dispatchIdeaLabel:"Your idea or topic", dispatchIdeaPlaceholder:"Describe what you want to post about, or paste an idea from Recon...",
+    dispatchDesc:"Turn any idea into ready-to-publish copy: hook, caption, what photo or video to use, and hashtags.",
+    dispatchIdeaLabel:"Your idea or topic", dispatchIdeaPlaceholder:"Describe what you want to post about, or send one over from Idea Recon...",
     dispatchToneLabel:"Tone", toneMotivational:"Motivational", toneCasual:"Casual & friendly", toneHumorous:"Light-hearted", toneInformative:"Informative",
     dispatchGenerateBtn:"Write My Post", dispatchLoading:"Writing your post...",
     copyBtn:"Copy Text", copied:"Copied!",
-    commsEyebrow:"Step 04", commsHeading:"Comms — Engagement Helper",
+    commsEyebrow:"Step 04", commsHeading:"Comment Reply Helper",
     commsDesc:"Reply to your community with warmth, and give them reasons to keep talking.",
     commsReplyTitle:"Reply Suggestions", commsCommentLabel:"Paste a comment (or describe the kind of comments you get)",
     commsCommentPlaceholder:"e.g. Someone commented: 'Sir, this really motivated me today, thank you!'",
@@ -478,7 +492,7 @@ const translations = {
     commsStarterTitle:"Conversation Starters", commsStarterTopicLabel:"Topic (optional)",
     commsStarterPlaceholder:"e.g. discipline, army life, Nepal, family",
     commsStarterBtn:"Generate Questions", commsStarterLoading:"Coming up with questions...",
-    logEyebrow:"Step 05", logHeading:"Saved content",
+    logEyebrow:"Step 05", logHeading:"Saved Log",
     logDesc:"Track every idea and post from first spark to published. Saved on this computer.",
     logRibbonLabel:"Posted Service Ribbon",
     logEmpty:"Nothing logged yet. Save ideas or posts here as you create them.",
@@ -487,99 +501,101 @@ const translations = {
     supplyEyebrow:"Step 06", supplyHeading:"Supply Lines — Monetization",
     supplyDesc:"How Facebook creators are typically paid, and where you should focus first.",
     supplyAdsTitle:"In-Stream Ads", supplyAdsDesc:"Short ads play inside your videos and you earn a share of that ad revenue. Requires a Professional/Creator account in good standing and meeting minimum followers and watch-time shown in your Meta Professional Dashboard.",
-    supplyStarsTitle:"Facebook Stars", supplyStarsDesc:"Viewers send paid Stars during live videos or on posts as a form of tipping, and you get a share of their value. Eligibility is shown in your dashboard once you're set up as a creator.",
+    supplyStarsTitle:"Facebook Stars", supplyStarsDesc:"Viewers send paid Stars during live videos or on posts as a form of tipping, and you get a share of their value. Eligibility is shown in your dashboard once you are set up as a creator.",
     supplySubsTitle:"Fan Subscriptions", supplySubsDesc:"Your most loyal followers pay a small recurring monthly fee for exclusive perks, extra content, or a badge that shows on their comments.",
-    supplyBrandTitle:"Brand Partnerships", supplyBrandDesc:"Companies pay you to feature their product, disclosed using Meta's branded content tools. This is often the most accessible path early on, since it depends on trust and engagement rather than Meta's payout thresholds.",
-    supplyNote:"Eligibility numbers (followers, watch-minutes, region availability) change and vary by country. Always check your own Meta Professional Dashboard for the current requirements before planning around a specific number.",
+    supplyBrandTitle:"Brand Partnerships", supplyBrandDesc:"Companies pay you to feature their product, disclosed using Meta's branded content tools. Often the most accessible path early on, since it depends on trust and engagement rather than Meta's payout thresholds.",
+    supplyNote:"Eligibility numbers (followers, watch-minutes, region availability) change and vary by country. Always check your own Meta Professional Dashboard for the current requirements.",
     advisorHeading:"Get Personalized Advice", advisorLabel:"Describe your content style, posting frequency, and rough audience size",
     advisorPlaceholder:"e.g. I post 3 times a week, mostly short videos about discipline and motivation, and I have around 400 followers so far.",
     advisorBtn:"Get Advice", advisorLoading:"Reviewing your situation...",
-    errRateLimit:
-    "Today's free AI limit has been reached. Please try again tomorrow.",
-
-    errInvalidKey:
-    "Invalid API key. Please check your OpenRouter key.",
-
-    errConnection:
-    "Unable to connect to OpenRouter. Check your internet connection.",
-
-    errNoResponse:
-    "The AI did not return a response. Please try again.",
-
-    errServer:
-    "The AI service is having problems right now. Please try again later.",
-
-    errGeneric:
-    "Something went wrong. Please try again."
+    navLive:"Go Live",
+    liveEyebrow:"Step 07", liveHeading:"Go Live",
+    liveDesc:"Plan a proper Facebook Live: what to set up beforehand, and a ready script to guide you while you're on camera.",
+    liveChecklistTitle:"Before You Go Live",
+    liveChecklist1:"Check your internet connection is stable, Wi-Fi if possible.",
+    liveChecklist2:"Prop your phone up steady (a stand, books, anything that doesn't shake) at eye level, in vertical orientation.",
+    liveChecklist3:"Face a light source (window or lamp) rather than having it behind you.",
+    liveChecklist4:"Use earphones with a mic if you have them, for clearer sound.",
+    liveChecklist5:"Post a normal update 30-60 minutes before, letting people know you're going Live soon and what it's about.",
+    liveChecklist6:"Have a glass of water nearby.",
+    liveChecklist7:"Plan to stay live for at least 10-15 minutes. Facebook tends to show longer Lives to more people.",
+    liveChecklist8:"Write yourself a short note with your key points so you don't lose your train of thought.",
+    liveChecklist9:"In the first minute, greet people by name as they join. Many viewers arrive a few minutes late.",
+    liveScriptCardTitle:"Live Idea & Script",
+    liveTopicLabel:"What is this Live about? (optional)", liveTopicPlaceholder:"Leave blank to let it suggest a topic",
+    liveDurationLabel:"How long will you go live?",
+    liveDurationShort:"10-15 minutes", liveDurationMedium:"15-30 minutes", liveDurationLong:"30+ minutes",
+    liveGenerateBtn:"Generate Live Script", liveLoading:"Planning your live..."
   },
   np: {
-    appTitle:"क्रिएटर साथी", appSub:"तपाईंको डिजिटल यात्राको साथी",
-    navSetup:"स्थापना", navRecon:"विचार खोजी", navDispatch:"पोस्ट लेखन", navComms:"सञ्चार", navLog:"योजना लग", navSupply:"आम्दानी मार्ग",
-    setupEyebrow:"चरण ०१", setupHeading:"आफ्नो कमाण्ड पोस्ट स्थापना गर्नुहोस्",
-    setupDesc:"यो टुल तपाईंको लागि सोच्न सकोस् भनेर आफ्नो निःशुल्क OpenRouter खाता जोड्नुहोस्। तपाईंको कुञ्जी (key) यही कम्प्युटरमा मात्र सुरक्षित रहन्छ — OpenRouter बाहेक कतै पनि पठाइँदैन।",
-    apiKeyLabel:"OpenRouter API कुञ्जी", apiKeyHelp:"openrouter.ai मा गएर Keys बाट निःशुल्क कुञ्जी लिनुहोस्। निःशुल्क मोडेलहरूका लागि क्रेडिट कार्ड आवश्यक पर्दैन।",
-    modelLabel:"मोडेल", modelHelp:"\"openrouter/free\" ले स्वतः एउटा निःशुल्क मोडेल छान्छ। कुनै निश्चित निःशुल्क मोडेल छान्न चाहनुभयो भने openrouter.ai/models बाट :free सहितको नाम कपी गर्नुहोस्।",
-    aboutLabel:"तपाईं र तपाईंको पेजको बारेमा (वैकल्पिक, तर धेरै सहयोगी)",
-    aboutPlaceholder:"जस्तै: नेपाली सेनाबाट अवकाश प्राप्त। म आफ्नो समुदायसँग जीवनका पाठहरू, अनुशासन, पारिवारिक जीवन र दैनिक क्षणहरू बाँड्न चाहन्छु। मेरो दर्शक अधिकांश नेपाली वयस्कहरू हुन्।",
-    aboutHelp:"यसले टुलले बनाउने हरेक विचार, पोस्ट, र जवाफलाई तपाईंअनुसार व्यक्तिगत बनाउन मद्दत गर्छ।",
-    saveBtn:"सेटिङ सुरक्षित गर्नुहोस्", testBtn:"जडान जाँच गर्नुहोस्",
-    savedMsg:"सेटिङ सुरक्षित भयो।", testing:"जडान जाँच गर्दै...", testSuccess:"सफलतापूर्वक जडान भयो!", testFail:"जडान असफल भयो: ",
-    errNoKey:"कृपया पहिले Setup मा आफ्नो OpenRouter API कुञ्जी थपेर सुरक्षित गर्नुहोस्।",
-    reconEyebrow:"चरण ०२", reconHeading:"विचार खोजी",
-    reconDesc:"तपाईंको पोस्टहरू आपसमा जोडिएको महसुस होस् भनेर, विषयगत प्लेलिस्टमा समूहबद्ध गरिएका ताजा विचारहरू पाउनुहोस् — Reels, Stories, र सामान्य पोस्टहरूको मिश्रणमा।",
-    reconTopicLabel:"विषय वा शब्द (वैकल्पिक)", reconTopicPlaceholder:"आफैं छान्न दिन खाली छोड्नुहोस्",
-    reconCountLabel:"कति विचार चाहिन्छ",
-    reconFormatLabel:"मुख्य ढाँचा", reconFormatAny:"सबैको मिश्रण", reconFormatReel:"Reels", reconFormatStory:"FB Stories", reconFormatPost:"सामान्य पोस्ट",
-    reconGenerateBtn:"विचार निकाल्नुहोस्", reconLoading:"विचार खोज्दै...",
-    addToDispatchBtn:"पोस्ट लेखनमा पठाउनुहोस्", saveToLogBtn:"योजना लगमा सुरक्षित गर्नुहोस्", savedToLog:"लगमा सुरक्षित भयो।",
-    dispatchEyebrow:"चरण ०३", dispatchHeading:"पोस्ट लेखन",
-    dispatchDesc:"कुनै पनि विचारलाई तयार पोस्टमा बदल्नुहोस् — hook, मुख्य भाग, कल-टु-एक्सन, र ह्यासट्यागहरू।",
-    dispatchIdeaLabel:"तपाईंको विचार वा विषय", dispatchIdeaPlaceholder:"तपाईं के बारे पोस्ट गर्न चाहनुहुन्छ लेख्नुहोस्, वा Recon बाट विचार पेस्ट गर्नुहोस्...",
-    dispatchToneLabel:"भाव (Tone)", toneMotivational:"प्रेरणादायी", toneCasual:"साधारण र मैत्रीपूर्ण", toneHumorous:"हल्का ठट्टापूर्ण", toneInformative:"जानकारीमूलक",
-    dispatchGenerateBtn:"मेरो पोस्ट लेख्नुहोस्", dispatchLoading:"तपाईंको पोस्ट लेख्दै...",
-    copyBtn:"टेक्स्ट कपी गर्नुहोस्", copied:"कपी भयो!",
-    commsEyebrow:"चरण ०४", commsHeading:"सञ्चार — सहभागिता सहयोगी",
-    commsDesc:"आफ्नो समुदायलाई न्यानो भावले जवाफ दिनुहोस्, र उनीहरूलाई कुरा गरिरहन कारण दिनुहोस्।",
-    commsReplyTitle:"जवाफ सुझावहरू", commsCommentLabel:"कुनै कमेन्ट पेस्ट गर्नुहोस् (वा तपाईंले पाउने कमेन्टका प्रकार बताउनुहोस्)",
-    commsCommentPlaceholder:"जस्तै: कसैले लेख्यो: 'सर, यसले मलाई आज साँच्चै प्रेरित गर्‍यो, धन्यवाद!'",
-    commsReplyBtn:"जवाफ सुझाव दिनुहोस्", commsReplyLoading:"जवाफ सोच्दै...",
-    commsStarterTitle:"कुराकानी सुरु गर्ने प्रश्नहरू", commsStarterTopicLabel:"विषय (वैकल्पिक)",
+    appTitle:"Creator Sathi", appSub:"तपाईंको डिजिटल यात्राको साथी",
+    navSetup:"सेटअप", navRecon:"आइडिया", navDispatch:"पोस्ट लेख्नुहोस्", navComms:"कमेन्ट जवाफ", navLog:"सेभ गरिएका", navSupply:"आम्दानी",
+    setupEyebrow:"चरण १", setupHeading:"पहिले सेटअप गरौं",
+    setupDesc:"यो टुलले तपाईंको लागि सोच्न सकोस् भनेर आफ्नो निःशुल्क OpenRouter एकाउन्ट जोड्नुहोस्। तपाईंको key यही कम्प्युटरमा मात्र सुरक्षित बस्छ, अरू कतै जाँदैन।",
+    apiKeyLabel:"OpenRouter API Key", apiKeyHelp:"openrouter.ai मा गएर Keys मेनुबाट निःशुल्क key लिनुहोस्। फ्री मोडेलका लागि क्रेडिट कार्ड चाहिँदैन।",
+    modelLabel:"मोडेल", modelHelp:"\"openrouter/free\" राख्दा यसले आफैं एउटा फ्री मोडेल छान्छ। छुट्टै मोडेल चाहेमा openrouter.ai/models बाट :free भएको नाम कपी गर्नुहोस्।",
+    aboutLabel:"तपाईं र तपाईंको पेजको बारेमा (वैकल्पिक, तर लेख्दा धेरै फाइदा हुन्छ)",
+    aboutPlaceholder:"जस्तै: नेपाली सेनाबाट रिटायर्ड। म जीवनका पाठ, अनुशासन, र परिवारका दैनिक क्षणहरू आफ्नो पेजमा साझा गर्न चाहन्छु।",
+    aboutHelp:"यसले हरेक आइडिया, पोस्ट, र जवाफलाई तपाईंको आफ्नै कथाअनुसार बनाउन मद्दत गर्छ।",
+    saveBtn:"सेभ गर्नुहोस्", testBtn:"जडान जाँच्नुहोस्",
+    savedMsg:"सेटिङ सेभ भयो।", testing:"जाँच गर्दैछ...", testSuccess:"राम्रोसँग जडान भयो!", testFail:"जडान भएन: ",
+    errNoKey:"कृपया पहिले Setup मा गएर आफ्नो OpenRouter API key राखेर सेभ गर्नुहोस्।",
+    reconEyebrow:"चरण २", reconHeading:"आइडिया खोज्नुहोस्",
+    reconDesc:"Reels, Story, र सामान्य पोस्ट मिसाएर, एउटै विषयमा जोडिएको आइडियाको समूह (playlist) पाउनुहोस्।",
+    reconTopicLabel:"विषय वा शब्द (वैकल्पिक)", reconTopicPlaceholder:"खाली छोड्नुभयो भने आफैं राम्रो विषय छान्छ",
+    reconCountLabel:"कति आइडिया चाहियो",
+    reconFormatLabel:"मुख्य फर्म्याट", reconFormatAny:"सबै मिसाएर", reconFormatReel:"Reels", reconFormatStory:"FB Story", reconFormatPost:"सामान्य पोस्ट",
+    reconGenerateBtn:"आइडिया निकाल्नुहोस्", reconLoading:"आइडिया खोज्दैछ...",
+    addToDispatchBtn:"+ पोस्ट लेख्नमा लानुहोस्", saveToLogBtn:"लगमा सेभ गर्नुहोस्", savedToLog:"लगमा सेभ भयो।",
+    linkedFromRecon:"आइडियाबाट ल्याइएको: ",
+    dispatchEyebrow:"चरण ३", dispatchHeading:"पोस्ट लेख्नुहोस्",
+    dispatchDesc:"कुनै पनि आइडियालाई तयार पोस्टमा बदल्नुहोस्: hook, क्याप्सन, कस्तो फोटो वा भिडियो राख्ने, र ह्यासट्याग।",
+    dispatchIdeaLabel:"तपाईंको आइडिया वा विषय", dispatchIdeaPlaceholder:"के बारे पोस्ट गर्ने लेख्नुहोस्, वा Idea बाट पठाउनुहोस्...",
+    dispatchToneLabel:"पोस्टको भाव", toneMotivational:"प्रेरणादायी", toneCasual:"साधारण, साथीजस्तो", toneHumorous:"हल्का ठट्टापूर्ण", toneInformative:"जानकारीमूलक",
+    dispatchGenerateBtn:"मेरो पोस्ट लेख्नुहोस्", dispatchLoading:"पोस्ट लेख्दैछ...",
+    copyBtn:"कपी गर्नुहोस्", copied:"कपी भयो!",
+    commsEyebrow:"चरण ४", commsHeading:"कमेन्ट जवाफ सहयोगी",
+    commsDesc:"आफ्नो समुदायलाई न्यानो जवाफ दिनुहोस्, र कुरा गरिरहन मन लाग्ने बनाउनुहोस्।",
+    commsReplyTitle:"जवाफका सुझाव", commsCommentLabel:"कमेन्ट पेस्ट गर्नुहोस् (वा तपाईंलाई प्रायः कस्तो कमेन्ट आउँछ लेख्नुहोस्)",
+    commsCommentPlaceholder:"जस्तै: कसैले लेख्यो — 'सर, आजको पोस्टले साँच्चै प्रेरित गर्‍यो, धन्यवाद!'",
+    commsReplyBtn:"जवाफ सुझाव पाउनुहोस्", commsReplyLoading:"जवाफ सोच्दैछ...",
+    commsStarterTitle:"कुराकानी सुरु गर्ने प्रश्न", commsStarterTopicLabel:"विषय (वैकल्पिक)",
     commsStarterPlaceholder:"जस्तै: अनुशासन, सेना जीवन, नेपाल, परिवार",
-    commsStarterBtn:"प्रश्नहरू बनाउनुहोस्", commsStarterLoading:"प्रश्नहरू सोच्दै...",
-    logEyebrow:"चरण ०५", logHeading:"योजना लग",
-    logDesc:"पहिलो विचारदेखि प्रकाशित नभएसम्म हरेक विचार र पोस्ट ट्र्याक गर्नुहोस्। यही कम्प्युटरमा सुरक्षित।",
-    logRibbonLabel:"पोस्ट भएको सेवा रिबन",
-    logEmpty:"अहिलेसम्म केही लग गरिएको छैन। विचार वा पोस्ट बनाउँदा यहाँ सुरक्षित गर्नुहोस्।",
-    colTitle:"शीर्षक", colFormat:"ढाँचा", colStatus:"स्थिति", colDate:"मिति",
-    statusIdea:"विचार", statusDrafted:"मस्यौदा", statusScheduled:"तालिकाबद्ध", statusPosted:"पोस्ट भयो",
-    supplyEyebrow:"चरण ०६", supplyHeading:"आम्दानी मार्ग",
-    supplyDesc:"फेसबुक क्रिएटरहरूले सामान्यतया कसरी आम्दानी गर्छन्, र तपाईंले पहिले केमा ध्यान दिनुपर्छ।",
-    supplyAdsTitle:"इन-स्ट्रिम विज्ञापन", supplyAdsDesc:"तपाईंको भिडियोभित्र छोटो विज्ञापनहरू देखिन्छन् र त्यसको आम्दानीको हिस्सा तपाईंले पाउनुहुन्छ। यसका लागि राम्रो स्थितिमा रहेको Professional/Creator खाता र Meta Professional Dashboard मा देखिने न्यूनतम फलोअर र वाच-टाइम पूरा गर्नुपर्छ।",
-    supplyStarsTitle:"फेसबुक स्टार्स", supplyStarsDesc:"दर्शकहरूले लाइभ भिडियो वा पोस्टमा टिपको रूपमा पैसा तिरेर स्टार्स पठाउँछन्, र त्यसको हिस्सा तपाईंले पाउनुहुन्छ। योग्यता तपाईं क्रिएटरको रूपमा सेटअप भएपछि ड्यासबोर्डमा देखिन्छ।",
-    supplySubsTitle:"फ्यान सब्स्क्रिप्सन", supplySubsDesc:"तपाईंका सबैभन्दा वफादार फलोअरहरूले विशेष सुविधा, थप सामग्री, वा कमेन्टमा देखिने ब्याजका लागि सानो मासिक शुल्क तिर्छन्।",
-    supplyBrandTitle:"ब्रान्ड साझेदारी", supplyBrandDesc:"कम्पनीहरूले तिनीहरूको उत्पादन देखाउनका लागि तपाईंलाई तिर्छन्, जुन Meta को branded content टुलबाट खुलासा गरिन्छ। यो प्रायः सुरुमा सबैभन्दा पहुँचयोग्य मार्ग हो, किनभने यो Meta को भुक्तानी सीमाभन्दा विश्वास र सहभागितामा निर्भर हुन्छ।",
-    supplyNote:"योग्यताका संख्याहरू (फलोअर, वाच-मिनेट, क्षेत्र उपलब्धता) परिवर्तन हुन्छन् र देशअनुसार फरक हुन्छन्। कुनै निश्चित संख्यामा भर परी योजना बनाउनुअघि सधैं आफ्नो Meta Professional Dashboard मा हालको आवश्यकता जाँच्नुहोस्।",
-    advisorHeading:"व्यक्तिगत सल्लाह लिनुहोस्", advisorLabel:"आफ्नो सामग्री शैली, पोस्ट गर्ने दर, र अनुमानित दर्शक संख्या वर्णन गर्नुहोस्",
-    advisorPlaceholder:"जस्तै: म हप्तामा ३ पटक पोस्ट गर्छु, प्रायः अनुशासन र प्रेरणाका बारे छोटो भिडियोहरू, र मसँग हालसम्म करिब ४०० फलोअर छन्।",
-    advisorBtn:"सल्लाह लिनुहोस्", advisorLoading:"तपाईंको अवस्था हेर्दै...",
-    errRateLimit:
-  "आजको निःशुल्क AI सीमा सकिएको छ। कृपया भोलि फेरि प्रयास गर्नुहोस्।",
-
-    errInvalidKey:
-    "API कुञ्जी मान्य छैन। कृपया आफ्नो OpenRouter कुञ्जी जाँच गर्नुहोस्।",
-
-    errConnection:
-    "OpenRouter सँग जडान हुन सकेन। कृपया इन्टरनेट जाँच गर्नुहोस्।",
-
-    errNoResponse:
-    "AI बाट कुनै उत्तर प्राप्त भएन। कृपया फेरि प्रयास गर्नुहोस्।",
-
-    errServer:
-    "AI सेवा अहिले समस्यामा छ। कृपया केही समयपछि प्रयास गर्नुहोस्।",
-
-    errGeneric:
-    "केही समस्या भयो। कृपया फेरि प्रयास गर्नुहोस्।"
-
+    commsStarterBtn:"प्रश्न बनाउनुहोस्", commsStarterLoading:"प्रश्न सोच्दैछ...",
+    logEyebrow:"चरण ५", logHeading:"सेभ गरिएका",
+    logDesc:"हरेक आइडिया र पोस्टलाई सुरुदेखि पोस्ट नभएसम्म ट्र्याक गर्नुहोस्। यो कम्प्युटरमै सेभ हुन्छ।",
+    logRibbonLabel:"पोस्ट भइसकेकाहरूको ब्याज",
+    logEmpty:"अहिलेसम्म केही सेभ छैन। आइडिया वा पोस्ट बनाउँदा यहाँ सेभ गर्नुहोस्।",
+    colTitle:"शीर्षक", colFormat:"फर्म्याट", colStatus:"अवस्था", colDate:"मिति",
+    statusIdea:"आइडिया", statusDrafted:"लेखियो", statusScheduled:"तय भयो", statusPosted:"पोस्ट भयो",
+    supplyEyebrow:"चरण ६", supplyHeading:"आम्दानीको बाटो",
+    supplyDesc:"फेसबुक क्रिएटरहरूले सामान्यतया कसरी कमाउँछन्, र तपाईंले पहिले केमा ध्यान दिने।",
+    supplyAdsTitle:"इन-स्ट्रिम एड्स", supplyAdsDesc:"तपाईंको भिडियोभित्रै छोटो विज्ञापन देखिन्छ, र त्यसको केही हिस्सा तपाईंलाई आउँछ। यसका लागि Professional/Creator एकाउन्ट, र Meta Dashboard मा देखिने न्यूनतम फलोअर र वाच-टाइम पुर्‍याउनुपर्छ।",
+    supplyStarsTitle:"फेसबुक स्टार्स", supplyStarsDesc:"दर्शकले लाइभ भिडियो वा पोस्टमा टिपको रूपमा पैसा तिरेर स्टार्स पठाउँछन्, र त्यसको हिस्सा तपाईंलाई आउँछ। योग्यता तपाईं क्रिएटर भइसकेपछि आफ्नो Dashboard मा देखिन्छ।",
+    supplySubsTitle:"फ्यान सब्स्क्रिप्सन", supplySubsDesc:"तपाईंका पक्का फलोअरहरूले महिनैपिच्छे थोरै पैसा तिरेर विशेष सामग्री वा ब्याज पाउँछन्।",
+    supplyBrandTitle:"ब्रान्ड डिल", supplyBrandDesc:"कम्पनीहरूले आफ्नो प्रोडक्ट देखाउन तपाईंलाई पैसा तिर्छन्, जुन Meta को branded content टुलबाट खुलासा गर्नुपर्छ। यो प्रायः सुरुमा सबैभन्दा सजिलो बाटो हो — Meta को कुनै न्यूनतम सीमा पुगेकै हुनुपर्दैन, बरु विश्वास र इनगेजमेन्टले काम गर्छ।",
+    supplyNote:"फलोअर, वाच-मिनेट, र कुन देशमा उपलब्ध छ भन्ने संख्या बेला-बेला परिवर्तन हुन्छ। कुनै निश्चित संख्यामा भर परेर योजना बनाउनुअघि आफ्नो Meta Professional Dashboard मा हालको नियम जाँच्नुहोस्।",
+    advisorHeading:"आफ्नो लागि सल्लाह लिनुहोस्", advisorLabel:"तपाईं कस्तो कन्टेन्ट बनाउनुहुन्छ, कति पटक पोस्ट गर्नुहुन्छ, र फलोअर कति छन् लेख्नुहोस्",
+    advisorPlaceholder:"जस्तै: म हप्तामा ३ पटक पोस्ट गर्छु, प्रायः अनुशासन र प्रेरणाका छोटो भिडियो, र हालसम्म करिब ४०० फलोअर छन्।",
+    advisorBtn:"सल्लाह लिनुहोस्", advisorLoading:"तपाईंको अवस्था हेर्दैछ...",
+    navLive:"लाइभ",
+    liveEyebrow:"चरण ७", liveHeading:"फेसबुक लाइभ",
+    liveDesc:"राम्रोसँग फेसबुक लाइभ जाने योजना बनाउनुहोस्: पहिले के-के तयार गर्ने, र क्यामेरा अगाडि हुँदा पछ्याउन मिल्ने स्क्रिप्ट।",
+    liveChecklistTitle:"लाइभ जानुअघि",
+    liveChecklist1:"आफ्नो इन्टरनेट राम्रोसँग चलिरहेको छ भनी जाँच्नुहोस्, सकेसम्म Wi-Fi प्रयोग गर्नुहोस्।",
+    liveChecklist2:"फोनलाई नहल्लिने गरी स्ट्यान्ड वा कुनै टेकोमा आँखाको लेभलमा, खडा (vertical) अवस्थामा राख्नुहोस्।",
+    liveChecklist3:"उज्यालोतिर आफ्नो अनुहार फर्काउनुहोस् (झ्याल वा बत्तीतिर), पछाडिबाट उज्यालो नआओस्।",
+    liveChecklist4:"भएमा माइकसहितको इयरफोन प्रयोग गर्नुहोस्, आवाज सफा सुनिन्छ।",
+    liveChecklist5:"लाइभ जानुभन्दा ३०-६० मिनेट अगाडि सामान्य पोस्ट राखेर मानिसहरूलाई सूचित गर्नुहोस् — कुन विषयमा लाइभ जाँदैहुनुहुन्छ।",
+    liveChecklist6:"छेउमा एक गिलास पानी राख्नुहोस्।",
+    liveChecklist7:"कम्तीमा १०-१५ मिनेट लाइभमा बस्ने योजना बनाउनुहोस्। फेसबुकले लामो लाइभलाई बढी मानिसमाझ देखाउँछ।",
+    liveChecklist8:"आफ्ना मुख्य कुराहरू छोटो नोटमा लेखेर राख्नुहोस्, ताकि बीचमा भुल्नुभएन।",
+    liveChecklist9:"सुरुको मिनेटमै जोडिन आउनेहरूलाई नामले सम्बोधन गर्दै स्वागत गर्नुहोस्। धेरैजना केही मिनेट ढिलो गरी जोडिन्छन्।",
+    liveScriptCardTitle:"लाइभ आइडिया र स्क्रिप्ट",
+    liveTopicLabel:"यो लाइभ केको बारेमा हो? (वैकल्पिक)", liveTopicPlaceholder:"खाली छोड्नुभयो भने आफैं विषय सुझाउँछ",
+    liveDurationLabel:"कति समय लाइभ जाने सोच्नुभएको छ?",
+    liveDurationShort:"१०-१५ मिनेट", liveDurationMedium:"१५-३० मिनेट", liveDurationLong:"३०+ मिनेट",
+    liveGenerateBtn:"लाइभ स्क्रिप्ट बनाउनुहोस्", liveLoading:"लाइभको योजना बनाउँदैछ..."
   }
 };
 
@@ -596,26 +612,18 @@ function loadSettings(){
     if(rawLog) logItems = JSON.parse(rawLog);
   }catch(e){ console.error('load error', e); }
 }
-function saveSettingsToStorage(){
-  localStorage.setItem('ccc_settings', JSON.stringify(settings));
-}
-function saveLogToStorage(){
-  localStorage.setItem('ccc_log', JSON.stringify(logItems));
-}
-
+function saveSettingsToStorage(){ localStorage.setItem('ccc_settings', JSON.stringify(settings)); }
+function saveLogToStorage(){ localStorage.setItem('ccc_log', JSON.stringify(logItems)); }
 function t(key){ return (translations[lang] && translations[lang][key]) || translations.en[key] || key; }
 
 function applyTranslations(){
   document.documentElement.lang = lang === 'np' ? 'ne' : 'en';
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    el.textContent = t(el.getAttribute('data-i18n'));
-  });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
-    el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
-  });
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{ el.placeholder = t(el.getAttribute('data-i18n-placeholder')); });
   document.getElementById('langEn').classList.toggle('active', lang==='en');
   document.getElementById('langNp').classList.toggle('active', lang==='np');
   renderLog();
+  if(document.getElementById('liveChecklistList')) renderLiveChecklist();
 }
 
 document.getElementById('langEn').addEventListener('click', ()=>{ lang='en'; localStorage.setItem('ccc_lang',lang); applyTranslations(); });
@@ -632,57 +640,25 @@ document.querySelectorAll('.nav-item').forEach(btn=>{
 
 function langInstruction(){
   return lang === 'np'
-    ? 'Respond entirely in Nepali using Devanagari script, in a warm, respectful tone suitable for a Facebook audience in Nepal.'
+    ? 'Respond entirely in Nepali using Devanagari script. Use simple, everyday spoken Nepali the way real Nepali Facebook creators write, not stiff formal or literary Nepali. It is fine and natural to keep common English words as Nepali social media users normally do (for example: post, reel, story, hashtag, caption, follower, engagement) rather than forcing an unfamiliar Sanskritized translation for them.'
     : 'Respond entirely in English, in a warm, respectful, encouraging tone suitable for a Facebook audience.';
 }
 function aboutContext(){
-  return settings.about ? ('Context about the creator: ' + settings.about) : 'No extra context was given about the creator — keep suggestions broadly applicable to a beginner Facebook creator.';
+  return settings.about ? ('Context about the creator: ' + settings.about) : 'No extra context was given about the creator, keep suggestions broadly applicable to a beginner Facebook creator.';
 }
-function getFriendlyError(error){
+const antiGeneric = "Avoid generic, cliche, or overused motivational filler (for example do not just say things like 'never give up' or 'success is a journey'). Be specific and concrete: use a small real-feeling detail, scene, or personal angle grounded in the creator's context above, rather than an abstract platitude. Write like a real person actually talking, not a greeting-card quote.";
 
-  const msg =
-    String(error.message || error);
-
-  if(msg.includes('429')){
-    return t('errRateLimit');
-  }
-
-  if(msg.includes('401')){
-    return t('errInvalidKey');
-  }
-
-  if(msg.includes('Failed to fetch')){
-    return t('errConnection');
-  }
-
-  if(msg.includes('No content returned')){
-    return t('errNoResponse');
-  }
-
-  if(msg.includes('500')){
-    return t('errServer');
-  }
-
-  return t('errGeneric');
-}
-
-async function callOpenRouter(systemPrompt, userPrompt){
-  if(!settings.apiKey){
-    throw new Error(t('errNoKey'));
-  }
+async function callOpenRouter(systemPrompt, userPrompt, temperature){
+  if(!settings.apiKey){ throw new Error(t('errNoKey')); }
+  const body = {
+    model: settings.model || 'openrouter/free',
+    messages:[ {role:'system', content: systemPrompt}, {role:'user', content: userPrompt} ]
+  };
+  if(typeof temperature === 'number') body.temperature = temperature;
   const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method:'POST',
-    headers:{
-      'Authorization':'Bearer ' + settings.apiKey,
-      'Content-Type':'application/json'
-    },
-    body: JSON.stringify({
-      model: settings.model || 'openrouter/free',
-      messages:[
-        {role:'system', content: systemPrompt},
-        {role:'user', content: userPrompt}
-      ]
-    })
+    headers:{ 'Authorization':'Bearer ' + settings.apiKey, 'Content-Type':'application/json' },
+    body: JSON.stringify(body)
   });
   if(!res.ok){
     const errText = await res.text().catch(()=> '');
@@ -695,12 +671,8 @@ async function callOpenRouter(systemPrompt, userPrompt){
   return content.trim();
 }
 
-function setStatus(el, msg, kind){
-  el.textContent = msg || '';
-  el.className = 'status-msg' + (kind ? (' '+kind) : '');
-}
+function setStatus(el, msg, kind){ el.textContent = msg || ''; el.className = 'status-msg' + (kind ? (' '+kind) : ''); }
 
-/* ---------- SETUP ---------- */
 function initSetupTab(){
   document.getElementById('apiKeyInput').value = settings.apiKey;
   document.getElementById('modelInput').value = settings.model;
@@ -723,13 +695,10 @@ function initSetupTab(){
     try{
       await callOpenRouter('You are a helpful assistant.', 'Say hello in one short sentence.');
       setStatus(statusEl, t('testSuccess'), 'ok');
-    }catch(e){
-      setStatus(statusEl, t('testFail') + getFriendlyError(e), 'err');
-    }
+    }catch(e){ setStatus(statusEl, t('testFail') + e.message, 'err'); }
   });
 }
 
-/* ---------- RECON ---------- */
 function initReconTab(){
   document.getElementById('reconGenerateBtn').addEventListener('click', async ()=>{
     const btn = document.getElementById('reconGenerateBtn');
@@ -744,34 +713,21 @@ function initReconTab(){
     setStatus(statusEl, t('reconLoading'), '');
     resultsEl.innerHTML='';
     try{
-      const sys = "You are an experienced Facebook content strategist and social media coach. You are helping a retired Nepali Army veteran, now in his late 40s, who is starting his journey as a Facebook content creator. He wants practical, achievable ideas he can realistically produce alone — not overly trendy or equipment-heavy. Group the ideas into ONE short themed 'playlist' (a mini-series of connected episodes, give the playlist a short name) so the content feels cohesive rather than random. Favor " + formatLabel + ". For EACH idea, output in this exact plain-text pattern, one idea per block, separated by a blank line:\\nTITLE: <short episode title>\\nFORMAT: <Reel, Story, or Post>\\nHOOK: <one line hook>\\nWHAT TO DO: <one to two lines on what to film or write>\\nDo not use markdown symbols like # or **. " + langInstruction();
-      const usr = "Playlist topic/keyword: " + (topic || '(no specific topic — surprise me with something fitting)') + "\\nNumber of ideas: " + count + "\\n" + aboutContext();
-      const content = await callOpenRouter(sys, usr);
+      const sys = "You are an experienced Facebook content strategist and social media coach. You are helping a retired Nepali Army veteran, now in his late 40s, who is starting his journey as a Facebook content creator. He wants practical, achievable ideas he can realistically produce alone. Group the ideas into ONE short themed 'playlist' (a mini-series of connected episodes, give the playlist a short name) so the content feels cohesive rather than random. Favor " + formatLabel + ". " + antiGeneric + " For EACH idea, output in this exact plain-text pattern, one idea per block, with no markdown symbols like # or **, and start every single idea's block with the literal word TITLE: on its own line so blocks can be split apart programmatically:\nTITLE: <short episode title>\nFORMAT: <Reel, Story, or Post>\nHOOK: <one line hook, the first line that stops the scroll>\nVISUAL: <exactly what photo or video to capture, realistic to shoot alone on a phone>\nCAPTION: <a short one to two line caption or description idea to go with the post>\n" + langInstruction();
+      const usr = "Playlist topic/keyword: " + (topic || '(no specific topic, surprise me with something fitting)') + "\nNumber of ideas: " + count + "\n" + aboutContext();
+      const content = await callOpenRouter(sys, usr, 0.95);
       renderReconResults(content);
       setStatus(statusEl, '', '');
-    }catch(e){
-      setStatus(statusEl, getFriendlyError(e), 'err');
-    }
+    }catch(e){ setStatus(statusEl, e.message, 'err'); }
     btn.disabled = false;
   });
 }
 
-
-
 function renderReconResults(raw){
-
-  console.log("RAW RESPONSE:");
-  console.log(raw);
   const resultsEl = document.getElementById('reconResults');
   resultsEl.innerHTML='';
-  const blocks =
-  raw.match(
-    /TITLE:[\s\S]*?(?=TITLE:|$)/gi
-  ) || [];
-  console.log("BLOCK COUNT:", blocks.length);
-console.log(blocks);
-
-  if(blocks.length <= 1){
+  const blocks = raw.match(/TITLE:[\s\S]*?(?=\n\s*TITLE:|$)/gi) || [];
+  if(blocks.length === 0){
     const div = document.createElement('div');
     div.className='output';
     div.textContent = raw;
@@ -779,54 +735,59 @@ console.log(blocks);
     return;
   }
   blocks.forEach(block=>{
-    const titleM = block.match(
-    /TITLE:\s*([^\n\r]+)/i
-    );
-
-    const formatM = block.match(
-    /FORMAT:\s*([^\n\r]+)/i
-    );
-
-    const hookM = block.match(
-    /HOOK:\s*([^\n\r]+)/i
-    );
-
-    const whatM = block.match(
-    /WHAT TO DO:\s*([\s\S]*?)(?:\n---|$)/i
-    );
-
-    
-    const card = document.createElement('div');
-    card.className='idea-card';
-    const title = titleM ? titleM[1].trim() : block.slice(0,60);
+    const titleM = block.match(/TITLE:\s*([^\n\r]+)/i);
+    const formatM = block.match(/FORMAT:\s*([^\n\r]+)/i);
+    const hookM = block.match(/HOOK:\s*([^\n\r]+)/i);
+    const visualM = block.match(/VISUAL:\s*([\s\S]*?)(?:\nCAPTION:|$)/i);
+    const captionM = block.match(/CAPTION:\s*([\s\S]+)/i);
+    if(!titleM){ return; }
+    const title = titleM[1].trim();
     const format = formatM ? formatM[1].trim() : '';
     const hook = hookM ? hookM[1].trim() : '';
-    const what = whatM ? whatM[1].trim() : '';
-    card.innerHTML =
-'<span class="tag">'+ (format || '') +'</span>' +
-'<p><strong>TITLE</strong></p>' +
-'<h4 class="idea-title"></h4>' +
-'<p><strong>HOOK</strong></p>' +
-'<p class="idea-hook"></p>' +
-'<p><strong>WHAT TO DO</strong></p>' +
-'<p class="idea-what"></p>';
-  
-    card.querySelector('.idea-title').textContent = title;
+    const visual = visualM ? visualM[1].trim() : '';
+    const caption = captionM ? captionM[1].trim() : '';
 
-    card.querySelector('.idea-hook').textContent = hook;
-
-    card.querySelector('.idea-what').textContent = what;
+    const card = document.createElement('div');
+    card.className='idea-card';
+    const tag = document.createElement('span'); tag.className='tag'; tag.textContent = format || '';
+    const h4 = document.createElement('h4'); h4.textContent = title;
+    card.appendChild(tag); card.appendChild(h4);
+    if(hook){
+      const l = document.createElement('div'); l.className='field-label'; l.textContent = 'Hook';
+      const p = document.createElement('p'); p.textContent = hook;
+      card.appendChild(l); card.appendChild(p);
+    }
+    if(visual){
+      const l = document.createElement('div'); l.className='field-label'; l.textContent = lang==='np' ? 'फोटो/भिडियो' : 'Visual';
+      const p = document.createElement('p'); p.textContent = visual;
+      card.appendChild(l); card.appendChild(p);
+    }
+    if(caption){
+      const l = document.createElement('div'); l.className='field-label'; l.textContent = lang==='np' ? 'क्याप्सन' : 'Caption idea';
+      const p = document.createElement('p'); p.textContent = caption;
+      card.appendChild(l); card.appendChild(p);
+    }
 
     const btnRow = document.createElement('div');
     btnRow.className='btn-row';
     const sendBtn = document.createElement('button');
-    sendBtn.className='btn secondary small';
+    sendBtn.className='btn primary-small';
     sendBtn.textContent = t('addToDispatchBtn');
     sendBtn.addEventListener('click', ()=>{
-      document.getElementById('dispatchIdea').value = title + (hook ? (' — ' + hook) : '') + (what ? ('\\n' + what) : '');
+      let ideaText = title;
+      if(hook) ideaText += ' — ' + hook;
+      if(visual) ideaText += '\nVisual idea: ' + visual;
+      if(caption) ideaText += '\nCaption angle: ' + caption;
+      document.getElementById('dispatchIdea').value = ideaText;
       const fmtVal = /reel/i.test(format) ? 'reel' : (/story/i.test(format) ? 'story' : 'post');
       document.getElementById('dispatchFormat').value = fmtVal;
+      const banner = document.getElementById('dispatchLinkBanner');
+      document.getElementById('dispatchLinkText').textContent = t('linkedFromRecon') + title;
+      banner.style.display = 'flex';
       document.querySelector('.nav-item[data-tab="dispatch"]').click();
+      const ta = document.getElementById('dispatchIdea');
+      ta.classList.remove('flash'); void ta.offsetWidth; ta.classList.add('flash');
+      window.scrollTo(0,0);
     });
     const saveBtn = document.createElement('button');
     saveBtn.className='btn secondary small';
@@ -843,8 +804,11 @@ console.log(blocks);
   });
 }
 
-/* ---------- DISPATCH ---------- */
 function initDispatchTab(){
+  document.getElementById('dispatchLinkDismiss').addEventListener('click', ()=>{
+    document.getElementById('dispatchLinkBanner').style.display = 'none';
+  });
+
   document.getElementById('dispatchGenerateBtn').addEventListener('click', async ()=>{
     const btn = document.getElementById('dispatchGenerateBtn');
     const statusEl = document.getElementById('dispatchStatus');
@@ -852,22 +816,20 @@ function initDispatchTab(){
     const idea = document.getElementById('dispatchIdea').value.trim();
     const format = document.getElementById('dispatchFormat').value;
     const tone = document.getElementById('dispatchTone').value;
-    if(!idea){ setStatus(statusEl, lang==='np' ? 'कृपया पहिले विचार वा विषय लेख्नुहोस्।' : 'Please enter an idea or topic first.', 'err'); return; }
+    if(!idea){ setStatus(statusEl, lang==='np' ? 'कृपया पहिले आइडिया वा विषय लेख्नुहोस्।' : 'Please enter an idea or topic first.', 'err'); return; }
 
     btn.disabled = true;
     setStatus(statusEl, t('dispatchLoading'), '');
     outputEl.textContent='';
     document.getElementById('dispatchActions').style.display='none';
     try{
-      const sys = "You are a Facebook copywriting assistant helping a retired Nepali Army veteran write his own posts as a new content creator. Write copy that sounds like a real person speaking honestly and respectfully to his community — never salesy or robotic. Structure your response clearly with these labeled sections, plain text, no markdown symbols:\\nHOOK: (first line to stop the scroll)\\nBODY: (the main content, or a short scene-by-scene script if it's a Reel)\\nCTA: (one clear call to action, e.g. a question or invitation to comment)\\nHASHTAGS: (5 to 8 relevant hashtags)\\n" + langInstruction();
-      const usr = "Format: " + format + "\\nTone: " + tone + "\\nIdea/topic: " + idea + "\\n" + aboutContext();
-      const content = await callOpenRouter(sys, usr);
+      const sys = "You are a Facebook copywriting assistant helping a retired Nepali Army veteran write his own posts as a new content creator. Write copy that sounds like a real person speaking honestly and respectfully to his community, never salesy or robotic. " + antiGeneric + " Structure your response clearly with these labeled sections, plain text, no markdown symbols:\nHOOK: (first line to stop the scroll)\nCAPTION: (the full caption or body text, or a short scene-by-scene script if it is a Reel)\nVISUAL: (exactly what photo or video to use with this post: describe the specific shot, e.g. a selfie video while walking, a photo of an old army picture, a short clip of a daily routine. Give something realistic to capture alone on a phone, not a vague idea.)\nCTA: (one clear call to action, e.g. a question or invitation to comment)\nHASHTAGS: (5 to 8 relevant hashtags)\n" + langInstruction();
+      const usr = "Format: " + format + "\nTone: " + tone + "\nIdea/topic: " + idea + "\n" + aboutContext();
+      const content = await callOpenRouter(sys, usr, 0.9);
       outputEl.textContent = content;
       document.getElementById('dispatchActions').style.display='flex';
       setStatus(statusEl, '', '');
-    }catch(e){
-      setStatus(statusEl, getFriendlyError(e), 'err');
-    }
+    }catch(e){ setStatus(statusEl, e.message, 'err'); }
     btn.disabled = false;
   });
 
@@ -884,7 +846,7 @@ function initDispatchTab(){
   document.getElementById('saveDispatchBtn').addEventListener('click', ()=>{
     const idea = document.getElementById('dispatchIdea').value.trim();
     const format = document.getElementById('dispatchFormat').value;
-    const title = idea.split('\\n')[0].slice(0,80);
+    const title = idea.split('\n')[0].slice(0,80);
     addLogItem(title, format, 'Drafted');
     const b = document.getElementById('saveDispatchBtn');
     const original = b.textContent;
@@ -893,7 +855,6 @@ function initDispatchTab(){
   });
 }
 
-/* ---------- COMMS ---------- */
 function initCommsTab(){
   document.getElementById('commsReplyBtn').addEventListener('click', async ()=>{
     const btn = document.getElementById('commsReplyBtn');
@@ -906,11 +867,11 @@ function initCommsTab(){
     outputEl.textContent='';
     try{
       const sys = "You are a social media community manager helping a Facebook creator reply to comments in a warm, genuine, and respectful way that keeps the conversation going. Suggest exactly 3 short, natural reply options with slightly different tones: 1) Appreciative, 2) Conversational, 3) One that invites further discussion. Label each option plainly. No markdown symbols. " + langInstruction();
-      const usr = "Comment or situation: " + comment + "\\n" + aboutContext();
-      const content = await callOpenRouter(sys, usr);
+      const usr = "Comment or situation: " + comment + "\n" + aboutContext();
+      const content = await callOpenRouter(sys, usr, 0.7);
       outputEl.textContent = content;
       setStatus(statusEl, '', '');
-    }catch(e){ setStatus(statusEl, getFriendlyError(e), 'err'); }
+    }catch(e){ setStatus(statusEl, e.message, 'err'); }
     btn.disabled = false;
   });
 
@@ -924,22 +885,19 @@ function initCommsTab(){
     outputEl.textContent='';
     try{
       const sys = "Generate exactly 5 short, simple conversation-starter questions a Facebook creator could post to invite comments and engagement from his community. Number them 1 to 5. No markdown symbols. " + langInstruction();
-      const usr = "Topic focus: " + (topic || 'general — related to the creator\'s usual content') + "\n" + aboutContext();
-      const content = await callOpenRouter(sys, usr);
+      const usr = "Topic focus: " + (topic || 'general, related to the creator\'s usual content') + "\n" + aboutContext();
+      const content = await callOpenRouter(sys, usr, 0.8);
       outputEl.textContent = content;
       setStatus(statusEl, '', '');
-    }catch(e){ setStatus(statusEl, getFriendlyError(e), 'err'); }
+    }catch(e){ setStatus(statusEl, e.message, 'err'); }
     btn.disabled = false;
   });
 }
 
-/* ---------- LOG ---------- */
 function addLogItem(title, format, status){
   logItems.unshift({
     id: Date.now() + '-' + Math.random().toString(36).slice(2,7),
-    title: title || '(untitled)',
-    format: format || 'Post',
-    status: status || 'Idea',
+    title: title || '(untitled)', format: format || 'Post', status: status || 'Idea',
     date: new Date().toISOString().slice(0,10)
   });
   saveLogToStorage();
@@ -954,11 +912,9 @@ function renderLog(){
   tbody.innerHTML='';
 
   if(logItems.length === 0){
-    emptyMsg.style.display='block';
-    table.style.display='none';
+    emptyMsg.style.display='block'; table.style.display='none';
   }else{
-    emptyMsg.style.display='none';
-    table.style.display='table';
+    emptyMsg.style.display='none'; table.style.display='table';
     const statusOptions = ['Idea','Drafted','Scheduled','Posted'];
     const statusKeys = {Idea:'statusIdea', Drafted:'statusDrafted', Scheduled:'statusScheduled', Posted:'statusPosted'};
     logItems.forEach(item=>{
@@ -973,21 +929,13 @@ function renderLog(){
         if(opt === item.status) o.selected = true;
         sel.appendChild(o);
       });
-      sel.addEventListener('change', ()=>{
-        item.status = sel.value;
-        saveLogToStorage();
-        renderLog();
-      });
+      sel.addEventListener('change', ()=>{ item.status = sel.value; saveLogToStorage(); renderLog(); });
       tdStatus.appendChild(sel);
       const tdDate = document.createElement('td'); tdDate.textContent = item.date;
       const tdDel = document.createElement('td');
       const delBtn = document.createElement('button');
       delBtn.className='del-btn'; delBtn.textContent='✕';
-      delBtn.addEventListener('click', ()=>{
-        logItems = logItems.filter(i=>i.id !== item.id);
-        saveLogToStorage();
-        renderLog();
-      });
+      delBtn.addEventListener('click', ()=>{ logItems = logItems.filter(i=>i.id !== item.id); saveLogToStorage(); renderLog(); });
       tdDel.appendChild(delBtn);
       tr.appendChild(tdTitle); tr.appendChild(tdFormat); tr.appendChild(tdStatus); tr.appendChild(tdDate); tr.appendChild(tdDel);
       tbody.appendChild(tr);
@@ -997,43 +945,91 @@ function renderLog(){
   const postedCount = logItems.filter(i=>i.status==='Posted').length;
   ribbonRow.innerHTML='';
   const shown = Math.min(postedCount, 20);
-  for(let i=0;i<shown;i++){
-    const chip = document.createElement('div');
-    chip.className='ribbon-chip';
-    ribbonRow.appendChild(chip);
-  }
+  for(let i=0;i<shown;i++){ const chip = document.createElement('div'); chip.className='ribbon-chip'; ribbonRow.appendChild(chip); }
   if(postedCount > 20){
-    const more = document.createElement('span');
-    more.className='ribbon-more';
-    more.textContent = '+' + (postedCount-20);
+    const more = document.createElement('span'); more.className='ribbon-more'; more.textContent = '+' + (postedCount-20);
     ribbonRow.appendChild(more);
   }
   if(postedCount === 0){
-    const none = document.createElement('span');
-    none.className='ribbon-more';
-    none.textContent = lang==='np' ? '(अझै पोस्ट भएको छैन)' : '(none posted yet)';
+    const none = document.createElement('span'); none.className='ribbon-more';
+    none.textContent = lang==='np' ? '(अझै कुनै पोस्ट भएको छैन)' : '(none posted yet)';
     ribbonRow.appendChild(none);
   }
 }
 
-/* ---------- SUPPLY ---------- */
+function renderLiveChecklist(){
+  const list = document.getElementById('liveChecklistList');
+  list.innerHTML = '';
+  for(let i=1;i<=9;i++){
+    const li = document.createElement('li');
+    li.textContent = t('liveChecklist'+i);
+    list.appendChild(li);
+  }
+}
+
+function initLiveTab(){
+  renderLiveChecklist();
+  document.getElementById('liveGenerateBtn').addEventListener('click', async ()=>{
+    const btn = document.getElementById('liveGenerateBtn');
+    const statusEl = document.getElementById('liveStatus');
+    const outputEl = document.getElementById('liveOutput');
+    const topic = document.getElementById('liveTopic').value.trim();
+    const duration = document.getElementById('liveDuration').value;
+    const tone = document.getElementById('liveTone').value;
+    const durationLabel = {short:'about 10-15 minutes', medium:'about 15-30 minutes', long:'30 minutes or more'}[duration];
+
+    btn.disabled = true;
+    setStatus(statusEl, t('liveLoading'), '');
+    outputEl.textContent='';
+    document.getElementById('liveActions').style.display='none';
+    try{
+      const sys = "You are a Facebook Live coach helping a retired Nepali Army veteran run a proper, confident Facebook Live as a beginner content creator. " + antiGeneric + " Build a script sized for a live lasting " + durationLabel + ", broken into segments with rough time ranges that add up to roughly that total length. Structure your response in plain text, no markdown symbols, with these exact labeled sections:\nTITLE: (a short name for this Live)\nHOOK: (exactly what to say in the first 30 seconds to stop people scrolling past and get them to tap in)\nOPENING: (what to say in the first 1-2 minutes, welcoming viewers, including a line to greet latecomers by name as they join)\nTALKING POINTS: (3 to 5 segments, each starting with a time range like '2-5 min:', covering what to say or do in that segment)\nENGAGEMENT PROMPTS: (2-3 specific things to ask viewers during the live to get them commenting, placed at natural points)\nCLOSING: (how to wrap up, thank viewers, and a clear call to action such as follow, share, comment, or mention the next Live)\n" + langInstruction();
+      const usr = "Live topic: " + (topic || '(no specific topic, suggest something fitting)') + "\nPlanned duration: " + durationLabel + "\nTone: " + tone + "\n" + aboutContext();
+      const content = await callOpenRouter(sys, usr, 0.85);
+      outputEl.textContent = content;
+      document.getElementById('liveActions').style.display='flex';
+      setStatus(statusEl, '', '');
+    }catch(e){ setStatus(statusEl, e.message, 'err'); }
+    btn.disabled = false;
+  });
+
+  document.getElementById('copyLiveBtn').addEventListener('click', ()=>{
+    const text = document.getElementById('liveOutput').textContent;
+    navigator.clipboard.writeText(text).then(()=>{
+      const b = document.getElementById('copyLiveBtn');
+      const original = b.textContent;
+      b.textContent = t('copied');
+      setTimeout(()=>{ b.textContent = original; }, 1500);
+    });
+  });
+
+  document.getElementById('saveLiveBtn').addEventListener('click', ()=>{
+    const topic = document.getElementById('liveTopic').value.trim() || 'Facebook Live';
+    addLogItem(topic, 'Live', 'Drafted');
+    const b = document.getElementById('saveLiveBtn');
+    const original = b.textContent;
+    b.textContent = t('savedToLog');
+    setTimeout(()=>{ b.textContent = original; }, 1500);
+  });
+}
+
 function initSupplyTab(){
   document.getElementById('advisorBtn').addEventListener('click', async ()=>{
     const btn = document.getElementById('advisorBtn');
     const statusEl = document.getElementById('advisorStatus');
     const outputEl = document.getElementById('advisorOutput');
     const desc = document.getElementById('advisorInput').value.trim();
-    if(!desc){ setStatus(statusEl, lang==='np' ? 'कृपया आफ्नो अवस्था वर्णन गर्नुहोस्।' : 'Please describe your situation first.', 'err'); return; }
+    if(!desc){ setStatus(statusEl, lang==='np' ? 'कृपया आफ्नो अवस्था लेख्नुहोस्।' : 'Please describe your situation first.', 'err'); return; }
     btn.disabled = true;
     setStatus(statusEl, t('advisorLoading'), '');
     outputEl.textContent='';
     try{
-      const sys = "You are a Facebook monetization advisor. Based on the creator's content style, posting frequency, and audience size described below, recommend which 1-2 of Facebook's monetization paths (In-Stream Ads, Facebook Stars, Fan Subscriptions, Brand Partnerships) to prioritize first, and explain briefly why, plus 2-3 concrete next steps. Be honest that eligibility requirements and payouts vary by region and change over time — advise checking Meta's official Professional Dashboard for current numbers. No markdown symbols. " + langInstruction();
-      const usr = desc + "\\n" + aboutContext();
-      const content = await callOpenRouter(sys, usr);
+      const sys = "You are a Facebook monetization advisor. Based on the creator's content style, posting frequency, and audience size described below, recommend which 1-2 of Facebook's monetization paths (In-Stream Ads, Facebook Stars, Fan Subscriptions, Brand Partnerships) to prioritize first, and explain briefly why, plus 2-3 concrete next steps. Be honest that eligibility requirements and payouts vary by region and change over time, advise checking Meta's official Professional Dashboard for current numbers. No markdown symbols. " + langInstruction();
+      const usr = desc + "\n" + aboutContext();
+      const content = await callOpenRouter(sys, usr, 0.6);
       outputEl.textContent = content;
       setStatus(statusEl, '', '');
-    }catch(e){ setStatus(statusEl, getFriendlyError(e), 'err'); }
+    }catch(e){ setStatus(statusEl, e.message, 'err'); }
     btn.disabled = false;
   });
 }
@@ -1044,6 +1040,7 @@ initReconTab();
 initDispatchTab();
 initCommsTab();
 initSupplyTab();
+initLiveTab();
 applyTranslations();
 </script>
 </body>
