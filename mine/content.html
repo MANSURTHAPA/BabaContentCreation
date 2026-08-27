@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOADOUT — Content Command</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#121210;
+    --surface:#1c1c16;
+    --surface-2:#232319;
+    --line:#34322a;
+    --paper:#ece8da;
+    --muted:#948f7c;
+    --tsushima:#b4402e;
+    --tsushima-soft:#3a221d;
+    --pubg:#7a8a52;
+    --pubg-soft:#262a1c;
+    --efootball:#3a9457;
+    --efootball-soft:#1a2b1f;
+    --gold:#c9a24b;
+    --danger:#b4402e;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold);color:#121210;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .display{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:0.03em;}
+
+  a,button{font-family:inherit;}
+  button{cursor:pointer;}
+
+  /* ---------- Top HUD bar ---------- */
+  .hud{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:14px 22px;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, #17170f 0%, #121210 100%);
+    position:sticky;top:0;z-index:20;
+  }
+  .hud-brand{display:flex;align-items:center;gap:10px;}
+  .hud-brand .mark{
+    width:30px;height:30px;border:2px solid var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    transform:rotate(45deg);
+    flex:none;
+  }
+  .hud-brand .mark span{transform:rotate(-45deg);font-size:13px;font-weight:700;color:var(--gold);font-family:'Oswald',sans-serif;}
+  .hud-brand h1{font-size:20px;margin:0;letter-spacing:0.08em;}
+  .hud-brand .sub{color:var(--muted);font-size:11px;letter-spacing:0.12em;margin-top:1px;}
+  .hud-ticker{display:flex;gap:22px;flex-wrap:wrap;}
+  .ticker-item{font-size:11px;color:var(--muted);letter-spacing:0.06em;}
+  .ticker-item b{color:var(--paper);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+  /* ---------- Nav ---------- */
+  .tabs{
+    display:flex;gap:2px;padding:0 22px;background:var(--ink);
+    border-bottom:1px solid var(--line);overflow-x:auto;
+  }
+  .tab{
+    padding:12px 18px;font-size:13px;letter-spacing:0.08em;color:var(--muted);
+    background:none;border:none;border-bottom:2px solid transparent;
+    white-space:nowrap;font-family:'Oswald',sans-serif;text-transform:uppercase;
+  }
+  .tab.active{color:var(--paper);border-bottom-color:var(--gold);}
+  .tab:hover{color:var(--paper);}
+
+  main{max-width:1180px;margin:0 auto;padding:26px 22px 80px;}
+  .view{display:none;}
+  .view.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;gap:12px;flex-wrap:wrap;}
+  .section-head h2{font-size:22px;margin:0;}
+  .section-head .desc{color:var(--muted);font-size:13px;margin-top:2px;}
+
+  .btn{
+    background:var(--gold);color:#141208;border:none;padding:9px 16px;
+    font-size:12px;font-family:'Oswald',sans-serif;letter-spacing:0.08em;text-transform:uppercase;
+    font-weight:600;
+  }
+  .btn:hover{filter:brightness(1.08);}
+  .btn.ghost{background:transparent;color:var(--paper);border:1px solid var(--line);}
+  .btn.ghost:hover{border-color:var(--gold);color:var(--gold);}
+  .btn.small{padding:6px 11px;font-size:11px;}
+
+  /* ---------- Game tags ---------- */
+  .tag{
+    display:inline-flex;align-items:center;gap:5px;
+    font-size:10.5px;font-family:'JetBrains Mono',monospace;font-weight:700;
+    letter-spacing:0.04em;padding:3px 8px;border:1px solid;
+    text-transform:uppercase;
+  }
+  .tag svg{width:11px;height:11px;flex:none;}
+  .tag.tsushima{color:var(--tsushima);border-color:var(--tsushima);background:var(--tsushima-soft);}
+  .tag.pubg{color:var(--pubg);border-color:var(--pubg);background:var(--pubg-soft);}
+  .tag.efootball{color:var(--efootball);border-color:var(--efootball);background:var(--efootball-soft);}
+  .platform{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:11px;}
+  .platform svg{width:13px;height:13px;}
+
+  /* ---------- Quest stepper (signature element) ---------- */
+  .stepper{display:flex;align-items:center;gap:0;}
+  .stepper .node{
+    width:20px;height:20px;border-radius:50%;border:2px solid var(--line);
+    display:flex;align-items:center;justify-content:center;background:var(--surface);
+    flex:none;position:relative;z-index:1;
+  }
+  .stepper .node svg{width:10px;height:10px;opacity:.4;}
+  .stepper .bar{width:20px;height:2px;background:var(--line);flex:none;}
+  .stepper .node.done{border-color:var(--gold);background:var(--gold);}
+  .stepper .node.done svg{opacity:1;stroke:#141208;}
+  .stepper .bar.done{background:var(--gold);}
+  .stepper .node.current{border-color:var(--gold);}
+  .stepper .node.current svg{opacity:1;stroke:var(--gold);}
+
+  /* ---------- Dashboard ---------- */
+  .grid-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+  @media(max-width:820px){.grid-stats{grid-template-columns:repeat(2,1fr);}}
+  .stat-card{
+    background:var(--surface);border:1px solid var(--line);padding:16px;
+  }
+  .stat-card .label{font-size:10.5px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;font-family:'Oswald',sans-serif;}
+  .stat-card .value{font-size:28px;font-family:'JetBrains Mono',monospace;font-weight:700;margin-top:6px;color:var(--gold);}
+  .stat-card .value.small{font-size:15px;color:var(--paper);}
+
+  .dash-cols{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;}
+  @media(max-width:900px){.dash-cols{grid-template-columns:1fr;}}
+  .panel{background:var(--surface);border:1px solid var(--line);padding:18px;}
+  .panel h3{margin:0 0 12px;font-size:14px;color:var(--muted);letter-spacing:0.08em;}
+  .list-row{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:10px 0;border-bottom:1px solid var(--line);
+  }
+  .list-row:last-child{border-bottom:none;}
+  .list-row .title{font-size:13.5px;}
+  .list-row .meta{display:flex;gap:8px;align-items:center;}
+  .empty{color:var(--muted);font-size:13px;padding:18px 0;text-align:center;border:1px dashed var(--line);}
+
+  /* ---------- Calendar ---------- */
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .cal-head .nav{display:flex;gap:6px;}
+  .cal-head button{background:var(--surface);border:1px solid var(--line);color:var(--paper);width:30px;height:30px;font-size:14px;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+  .cal-dow{background:var(--surface-2);text-align:center;font-size:10px;color:var(--muted);padding:6px 0;letter-spacing:0.1em;font-family:'Oswald',sans-serif;}
+  .cal-cell{background:var(--surface);min-height:96px;padding:6px;position:relative;cursor:pointer;}
+  .cal-cell:hover{background:var(--surface-2);}
+  .cal-cell.out{opacity:0.35;}
+  .cal-cell .num{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+  .cal-cell.today .num{color:var(--gold);font-weight:700;}
+  .cal-chip{
+    font-size:9.5px;padding:2px 5px;margin-top:3px;border-left:2px solid;
+    background:var(--surface-2);color:var(--paper);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .cal-chip.tsushima{border-color:var(--tsushima);}
+  .cal-chip.pubg{border-color:var(--pubg);}
+  .cal-chip.efootball{border-color:var(--efootball);}
+
+  /* ---------- Board ---------- */
+  .board{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start;}
+  @media(max-width:900px){.board{grid-template-columns:1fr 1fr;}}
+  @media(max-width:560px){.board{grid-template-columns:1fr;}}
+  .col{background:var(--surface-2);border:1px solid var(--line);min-height:120px;}
+  .col-head{padding:10px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+  .col-head span{font-size:12px;letter-spacing:0.08em;font-family:'Oswald',sans-serif;}
+  .col-head .count{font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:11px;}
+  .col-body{padding:10px;display:flex;flex-direction:column;gap:8px;min-height:60px;}
+  .col-body.drag-over{background:var(--tsushima-soft);}
+  .card{
+    background:var(--surface);border:1px solid var(--line);padding:10px;
+    cursor:grab;
+  }
+  .card:active{cursor:grabbing;}
+  .card .title{font-size:13px;margin-bottom:6px;font-weight:600;}
+  .card .row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+  .card .date{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- Tracker ---------- */
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;}
+  th{color:var(--muted);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;font-family:'Oswald',sans-serif;cursor:pointer;user-select:none;}
+  th:hover{color:var(--gold);}
+  td.num{font-family:'JetBrains Mono',monospace;}
+  tr:hover td{background:var(--surface);}
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(10,10,8,0.7);
+    display:none;align-items:flex-start;justify-content:center;
+    padding:40px 16px;overflow-y:auto;z-index:50;
+  }
+  .overlay.active{display:flex;}
+  .modal{background:var(--surface);border:1px solid var(--line);width:100%;max-width:520px;padding:22px;}
+  .modal h3{margin:0 0 16px;font-size:17px;}
+  .field{margin-bottom:12px;}
+  .field label{display:block;font-size:11px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:5px;font-family:'Oswald',sans-serif;}
+  .field input,.field select,.field textarea{
+    width:100%;background:var(--ink);border:1px solid var(--line);color:var(--paper);
+    padding:8px 10px;font-size:13px;font-family:'Inter',sans-serif;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{outline:1px solid var(--gold);border-color:var(--gold);}
+  .field textarea{resize:vertical;min-height:60px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .modal-actions{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:10px;}
+  .modal-actions .right{display:flex;gap:8px;}
+
+  .ai-card{
+    background:var(--surface);border:1px solid var(--line);padding:12px;margin-bottom:8px;
+  }
+  .ai-card .title{font-size:13.5px;font-weight:600;margin-bottom:4px;}
+  .ai-card .hook{font-size:12.5px;color:var(--muted);margin-bottom:8px;line-height:1.4;}
+  .ai-card .meta-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;}
+  .ai-card .time{font-size:11px;color:var(--gold);font-family:'JetBrains Mono',monospace;}
+  .plan-day{
+    display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap;
+  }
+  .plan-day:last-child{border-bottom:none;}
+  .plan-day .dow{font-family:'Oswald',sans-serif;font-size:12px;width:38px;flex:none;color:var(--muted);letter-spacing:0.06em;}
+  .plan-day .body{flex:1;min-width:180px;}
+  .plan-day .idea{font-size:13px;}
+  .plan-day .sub{font-size:11px;color:var(--muted);margin-top:2px;}
+  .tips-block{font-size:13.5px;line-height:1.6;}
+  .tips-block ul{margin:6px 0 14px 18px;padding:0;}
+  .tips-block li{margin-bottom:4px;}
+  .tips-block h4{font-size:12.5px;color:var(--gold);text-transform:uppercase;letter-spacing:0.06em;font-family:'Oswald',sans-serif;margin:14px 0 4px;}
+  .tips-block h4:first-child{margin-top:0;}
+  .loading-text{color:var(--muted);font-size:12.5px;font-style:italic;padding:6px 0;}
+  .btn-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .ai-output{white-space:pre-wrap;background:var(--ink);border:1px solid var(--line);padding:14px;font-size:13px;line-height:1.6;color:var(--paper);margin-top:12px;}
+  .link-banner{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:var(--tsushima-soft);border:1px solid var(--tsushima);padding:9px 12px;
+    font-size:12.5px;color:var(--paper);margin-bottom:14px;
+  }
+  .link-banner button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;line-height:1;}
+  .btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .btn.small.ghost{padding:5px 10px;}
+
+  footer{text-align:center;color:var(--muted);font-size:11px;padding:20px;letter-spacing:0.06em;}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:1px;}
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <div class="hud-brand">
+    <div class="mark"><span>L</span></div>
+    <div>
+      <h1 class="display">Loadout</h1>
+      <div class="sub mono">CONTENT COMMAND</div>
+    </div>
+  </div>
+  <div class="hud-ticker" id="ticker"></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-view="setup">Setup</button>
+  <button class="tab" data-view="dashboard">Dashboard</button>
+  <button class="tab" data-view="calendar">Calendar</button>
+  <button class="tab" data-view="board">Board</button>
+  <button class="tab" data-view="tracker">Tracker</button>
+  <button class="tab" data-view="ai">AI Coach</button>
+  <button class="tab" data-view="writer">Post Writer</button>
+  <button class="tab" data-view="comments">Comments</button>
+  <button class="tab" data-view="monetize">Monetize</button>
+  <button class="tab" data-view="live">Go Live</button>
+</div>
+
+<main>
+
+  <!-- SETUP -->
+  <section class="view active" id="view-setup">
+    <div class="section-head">
+      <div>
+        <h2 class="display">Setup</h2>
+        <div class="desc">Connect your free OpenRouter account so the AI features can think for you. Your key is stored only on this device.</div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:16px;">
+      <h3>OpenRouter API Key</h3>
+      <div class="field">
+        <label>API Key</label>
+        <input type="password" id="ai-api-key" placeholder="sk-or-v1-...">
+        <div class="desc" style="margin-top:6px;">Get a free key at <span class="mono" style="color:var(--gold);">openrouter.ai/keys</span> — no credit card required for free models.</div>
+      </div>
+      <div class="field">
+        <label>Model</label>
+        <input type="text" id="ai-model-input" value="openrouter/free">
+        <div class="desc" style="margin-top:6px;">"openrouter/free" auto-picks a free model for you — no need to choose one manually. If you want a specific free model instead, paste its name (ending in :free) from openrouter.ai/models.</div>
+      </div>
+      <div class="btn-row" style="display:flex;gap:10px;margin-top:6px;">
+        <button class="btn small" onclick="saveAISettings()">Save Settings</button>
+        <button class="btn ghost small" onclick="testConnection()" id="test-conn-btn">Test Connection</button>
+      </div>
+      <div id="ai-settings-status" class="mono" style="font-size:11px;color:var(--gold);margin-top:8px;display:none;">Saved ✓</div>
+      <div id="test-conn-status" class="mono" style="font-size:11px;margin-top:8px;"></div>
+      <div class="desc" style="margin-top:8px;">Note: free OpenRouter models are rate-limited and occasionally slower/less reliable than paid ones. If a generation fails, wait a bit and try again.</div>
+    </div>
+
+    <div class="panel">
+      <h3>Your Current Page Stats</h3>
+      <div class="desc" style="margin-bottom:10px;">This app has no live connection to your real Instagram/Facebook/TikTok accounts — it only knows what you type here and log as posts. Fill this in (and update it as you grow) so Growth Tips and the Roadmap are grounded in your real numbers instead of guessing.</div>
+      <div class="metrics-row" style="grid-template-columns:repeat(3,1fr);">
+        <div class="field" style="margin-bottom:0;">
+          <label>Instagram followers</label>
+          <input type="number" min="0" id="ps-instagram">
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Facebook followers</label>
+          <input type="number" min="0" id="ps-facebook">
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>TikTok followers</label>
+          <input type="number" min="0" id="ps-tiktok">
+        </div>
+      </div>
+      <div class="field" style="margin-top:10px;">
+        <label>Anything else worth knowing (optional)</label>
+        <input type="text" id="ps-notes" placeholder="e.g. account is 2 months old, posted daily for 3 weeks then stopped...">
+      </div>
+      <button class="btn small" onclick="savePageStats()">Save Stats</button>
+      <span id="ps-status" class="mono" style="font-size:11px;color:var(--gold);margin-left:10px;display:none;">Saved ✓</span>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section class="view" id="view-dashboard">
+    <div class="section-head">
+      <div>
+        <h2 class="display">Mission Overview</h2>
+        <div class="desc">Your content operation across eFootball, Ghost of Tsushima &amp; PUBG.</div>
+      </div>
+      <button class="btn" onclick="openModal()">+ New Post</button>
+    </div>
+
+    <div class="grid-stats" id="stat-cards"></div>
+
+    <div class="dash-cols">
+      <div class="panel">
+        <h3>Upcoming Scheduled</h3>
+        <div id="upcoming-list"></div>
+      </div>
+      <div class="panel">
+        <h3>Needs Attention (Drafts)</h3>
+        <div id="attention-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section class="view" id="view-calendar">
+    <div class="section-head">
+      <div>
+        <h2 class="display">Calendar</h2>
+        <div class="desc">Click a day to log a post for that date.</div>
+      </div>
+      <button class="btn" onclick="openModal()">+ New Post</button>
+    </div>
+    <div class="cal-head">
+      <div class="mono" id="cal-label" style="font-size:15px;letter-spacing:0.05em;"></div>
+      <div class="nav">
+        <button onclick="shiftMonth(-1)">‹</button>
+        <button onclick="shiftMonth(1)">›</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </section>
+
+  <!-- BOARD -->
+  <section class="view" id="view-board">
+    <div class="section-head">
+      <div>
+        <h2 class="display">Content Board</h2>
+        <div class="desc">Drag cards through the pipeline: Idea → Draft → Ready → Posted.</div>
+      </div>
+      <button class="btn" onclick="openModal()">+ New Post</button>
+    </div>
+    <div class="board" id="board"></div>
+  </section>
+
+  <!-- TRACKER -->
+  <section class="view" id="view-tracker">
+    <div class="section-head">
+      <div>
+        <h2 class="display">Performance Tracker</h2>
+        <div class="desc">Log results once a post is live. Click column headers to sort.</div>
+      </div>
+      <button class="btn" onclick="openModal()">+ New Post</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table id="tracker-table">
+        <thead>
+          <tr>
+            <th data-sort="title">Post</th>
+            <th data-sort="game">Game</th>
+            <th data-sort="platform">Platform</th>
+            <th data-sort="format">Format</th>
+            <th data-sort="date">Date</th>
+            <th data-sort="likes">Likes</th>
+            <th data-sort="comments">Comments</th>
+            <th data-sort="shares">Shares</th>
+            <th data-sort="views">Views</th>
+          </tr>
+        </thead>
+        <tbody id="tracker-body"></tbody>
+      </table>
+    </div>
+    <div id="tracker-empty" class="empty" style="margin-top:14px;display:none;">No posts logged yet. Add a post and move it to Posted to start tracking performance.</div>
+  </section>
+
+  <!-- AI COACH -->
+  <section class="view" id="view-ai">
+    <div class="section-head">
+      <div>
+        <h2 class="display">AI Coach</h2>
+        <div class="desc">Strategic suggestions from Claude — not real-time trend data, but a structured push in the right direction.</div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:16px;">
+      <h3>Post Idea Generator</h3>
+      <div class="field-row" style="align-items:end;flex-wrap:wrap;">
+        <div class="field" style="margin-bottom:0;">
+          <label>Focus game</label>
+          <select id="ai-idea-game">
+            <option value="all">All three games</option>
+            <option value="efootball">eFootball</option>
+            <option value="tsushima">Ghost of Tsushima</option>
+            <option value="pubg">PUBG</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Focus format</label>
+          <select id="ai-idea-format">
+            <option value="any">Mix of everything</option>
+            <option value="reel">Reels only</option>
+            <option value="story">Stories only</option>
+            <option value="post">Standard posts / carousels only</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0;max-width:120px;">
+          <label>How many</label>
+          <select id="ai-idea-count">
+            <option value="5" selected>5</option>
+            <option value="8">8</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <button class="btn" id="ai-idea-btn" onclick="generateIdeas()">✨ Generate Ideas</button>
+        </div>
+      </div>
+      <div id="ai-idea-results" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="panel" style="margin-bottom:16px;">
+      <h3>Weekly Content Plan</h3>
+      <div class="desc" style="margin-bottom:10px;">A suggested 7-day spread across your games, platforms and posting times.</div>
+      <button class="btn" id="ai-plan-btn" onclick="generateWeeklyPlan()">✨ Generate Weekly Plan</button>
+      <div id="ai-plan-results" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="panel" style="margin-bottom:16px;">
+      <h3>Growth Tips</h3>
+      <div class="desc" style="margin-bottom:10px;">Based on your actual posting activity so far.</div>
+      <button class="btn" id="ai-tips-btn" onclick="generateGrowthTips()">✨ Analyze &amp; Advise</button>
+      <div id="ai-tips-results" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="panel">
+      <h3>30-Day Roadmap to 10K</h3>
+      <div class="desc" style="margin-bottom:10px;">A week-by-week system targeting consistent Facebook reach (fixing the 1k-vs-26-views swings) plus TikTok/Instagram support. Growth isn't guaranteed by any tool — this maximizes your odds by staying disciplined about what the algorithm actually rewards.</div>
+      <button class="btn" id="ai-roadmap-btn" onclick="generateRoadmap()">✨ Build Roadmap</button>
+      <div id="ai-roadmap-results" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="panel" style="margin-top:16px;">
+      <h3>Content Format Guide</h3>
+      <div class="desc" style="margin-bottom:12px;">Quick reference for shooting and editing each format. This is fixed guidance, not AI-generated — no key needed.</div>
+      <div class="tips-block">
+        <h4>Reels / Short Video (TikTok, IG Reels, FB Reels)</h4>
+        <ul>
+          <li>Vertical 9:16, first 1-3 seconds must show the payoff or a bold hook — don't build up slowly</li>
+          <li>Ideal length: 7-15s for pure highlight clips, up to 30-45s if there's a story/tutorial angle</li>
+          <li>Cut on action — trim dead air aggressively, keep pacing fast throughout</li>
+          <li>Burn in captions/text even for gameplay-only clips — many watch muted</li>
+          <li>Use a trending audio at low volume under game audio when it fits, not forced</li>
+          <li>Cover frame: pick the single sharpest, most exciting moment — this is what stops the scroll before they even press play</li>
+        </ul>
+        <h4>Photo Posts / Carousels</h4>
+        <ul>
+          <li>Use 1:1 or 4:5 crop, not the game's raw widescreen — it gets cropped awkwardly otherwise</li>
+          <li>Slide 1 (cover) needs a bold text overlay or the most striking image — it decides if they tap through</li>
+          <li>3-7 slides is the sweet spot; order best-to-worst won't work — put your second-best moment last to reward full swipes</li>
+          <li>End on a soft call-to-action slide (follow for more clips, drop your best play, etc.)</li>
+        </ul>
+        <h4>Stories / Status</h4>
+        <ul>
+          <li>9:16, meant to feel raw and immediate — behind-the-scenes, polls, "which clip should I post today"</li>
+          <li>Use interactive stickers (poll, question, slider) — they boost engagement signal more than a static image</li>
+          <li>Post 2-4 per day max on active days; save your best moments for Highlights so new visitors see them first</li>
+        </ul>
+        <h4>Platform Fit</h4>
+        <ul>
+          <li>Facebook: native Reels + longer native video tend to outperform reposted/watermarked clips — this is likely part of your view swings</li>
+          <li>TikTok: pure short-form, highest posting frequency tolerance</li>
+          <li>Instagram: Reels for reach, Carousels for saves/shares, Stories for daily connection</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- POST WRITER -->
+  <section class="view" id="view-writer">
+    <div class="section-head">
+      <div>
+        <h2 class="display">Post Writer</h2>
+        <div class="desc">Turn any idea into ready-to-publish copy: hook, caption, exactly what to film, a call to action, and hashtags.</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="link-banner" id="writer-link-banner" style="display:none;">
+        <span id="writer-link-text"></span>
+        <button onclick="document.getElementById('writer-link-banner').style.display='none';">✕</button>
+      </div>
+      <div class="field">
+        <label>Your idea or topic</label>
+        <textarea id="writer-idea" placeholder="Describe what you want to post about, or send one over from the Idea Generator..."></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field" style="margin-bottom:0;">
+          <label>Game</label>
+          <select id="writer-game">
+            <option value="efootball">eFootball</option>
+            <option value="tsushima">Ghost of Tsushima</option>
+            <option value="pubg">PUBG</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Platform</label>
+          <select id="writer-platform">
+            <option value="instagram">Instagram</option>
+            <option value="facebook">Facebook</option>
+            <option value="tiktok">TikTok</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field" style="margin-bottom:0;">
+          <label>Format</label>
+          <select id="writer-format">
+            <option value="Reel">Reel</option>
+            <option value="Story">Story</option>
+            <option value="Post" selected>Post / Carousel</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Tone</label>
+          <select id="writer-tone">
+            <option value="hype">Hype / high-energy</option>
+            <option value="casual">Casual &amp; friendly</option>
+            <option value="humorous">Light-hearted / meme</option>
+            <option value="informative">Informative / tips</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" id="writer-generate-btn" onclick="generateDispatch()">✨ Write My Post</button>
+      <div id="writer-status" class="mono" style="font-size:11px;margin-top:8px;"></div>
+      <div id="writer-output"></div>
+      <div class="btn-row" id="writer-actions" style="display:none;margin-top:10px;">
+        <button class="btn ghost small" onclick="copyWriterOutput()">Copy Full Text</button>
+        <button class="btn small" onclick="addDispatchToBoard(event)">+ Add to Board</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMENTS -->
+  <section class="view" id="view-comments">
+    <div class="section-head">
+      <div>
+        <h2 class="display">Comment Helper</h2>
+        <div class="desc">Reply to your community with warmth, and give them reasons to keep talking.</div>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:16px;">
+      <h3>Reply Suggestions</h3>
+      <div class="field">
+        <label>Paste a comment (or describe the kind of comments you get)</label>
+        <textarea id="comments-input" placeholder="e.g. Someone commented: 'bro this PUBG clip was insane, what sensitivity do you use?'"></textarea>
+      </div>
+      <button class="btn" id="comments-reply-btn" onclick="generateReplies()">✨ Suggest Replies</button>
+      <div id="comments-reply-status" class="mono" style="font-size:11px;margin-top:8px;"></div>
+      <div id="comments-reply-output"></div>
+    </div>
+    <div class="panel">
+      <h3>Conversation Starters</h3>
+      <div class="field">
+        <label>Topic (optional)</label>
+        <input type="text" id="comments-starter-topic" placeholder="e.g. PUBG loadouts, Tsushima combat, eFootball squads">
+      </div>
+      <button class="btn" id="comments-starter-btn" onclick="generateStarters()">✨ Generate Questions</button>
+      <div id="comments-starter-status" class="mono" style="font-size:11px;margin-top:8px;"></div>
+      <div id="comments-starter-output"></div>
+    </div>
+  </section>
+
+  <!-- MONETIZE -->
+  <section class="view" id="view-monetize">
+    <div class="section-head">
+      <div>
+        <h2 class="display">Monetize</h2>
+        <div class="desc">How gaming creators typically get paid on these platforms, and where to focus first.</div>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:16px;">
+      <div class="dash-cols" style="grid-template-columns:1fr 1fr;">
+        <div class="panel" style="margin-bottom:0;">
+          <h3>Facebook</h3>
+          <div class="hook" style="color:var(--paper);">In-Stream Ads (ad revenue share inside your videos), Stars (viewer tipping, especially on Live), and Fan Subscriptions (recurring monthly perks). Requires a Professional/Creator account meeting Meta's current follower and watch-time thresholds.</div>
+        </div>
+        <div class="panel" style="margin-bottom:0;">
+          <h3>TikTok</h3>
+          <div class="hook" style="color:var(--paper);">Creator Rewards Program (pays based on watch time and originality of longer videos), LIVE Gifts (viewer tipping during livestreams), and TikTok Series (paid exclusive content).</div>
+        </div>
+        <div class="panel" style="margin-bottom:0;">
+          <h3>Instagram</h3>
+          <div class="hook" style="color:var(--paper);">Reels/content bonuses (where available), Subscriptions (paid exclusive content for your most loyal followers), and Badges during Live.</div>
+        </div>
+        <div class="panel" style="margin-bottom:0;">
+          <h3>Brand Partnerships</h3>
+          <div class="hook" style="color:var(--paper);">Gaming brands, peripherals, and mobile game studios pay creators to feature their product — often the most accessible path early on since it depends on engagement and niche fit, not platform payout thresholds.</div>
+        </div>
+      </div>
+      <div class="empty" style="margin-top:14px;">Eligibility numbers (followers, watch-minutes, region availability) change often and vary by platform and country. Always check your own Creator/Professional dashboard on each platform for current requirements.</div>
+    </div>
+    <div class="panel">
+      <h3>Get Personalized Advice</h3>
+      <div class="field">
+        <label>Describe your content style, posting frequency, and rough audience size</label>
+        <textarea id="monetize-input" placeholder="e.g. I post PUBG and eFootball clips daily on TikTok and Facebook, around 300 followers combined so far."></textarea>
+      </div>
+      <button class="btn" id="monetize-btn" onclick="generateMonetizeAdvice()">✨ Get Advice</button>
+      <div id="monetize-status" class="mono" style="font-size:11px;margin-top:8px;"></div>
+      <div id="monetize-output"></div>
+    </div>
+  </section>
+
+  <!-- GO LIVE -->
+  <section class="view" id="view-live">
+    <div class="section-head">
+      <div>
+        <h2 class="display">Go Live</h2>
+        <div class="desc">Plan a proper livestream: what to set up beforehand, and a ready script to guide you while you're on camera.</div>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:16px;">
+      <h3>Before You Go Live</h3>
+      <ul style="margin:0;padding-left:20px;font-size:13.5px;color:var(--paper);line-height:1.9;">
+        <li>Test your stream setup (game audio + mic balance) at least 10 minutes before going live</li>
+        <li>Prep a short list of 3-4 talking points so there's never dead air</li>
+        <li>Post a heads-up on your other platforms 30-60 minutes before you go live</li>
+        <li>Pin a comment/caption telling viewers what you're playing and what to expect</li>
+        <li>Have a clear goal for the stream (ranked push, viewer Q&amp;A, casual grind)</li>
+        <li>Keep the first 2 minutes welcoming — greet people by name as they join</li>
+        <li>Plan 2-3 moments to directly ask viewers a question to spark chat</li>
+        <li>Decide your closing line and call to action in advance (follow, next stream time, etc.)</li>
+        <li>Save the VOD and clip the best 3 moments for Reels/TikTok afterward</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Live Idea &amp; Script</h3>
+      <div class="field">
+        <label>What is this Live about? (optional)</label>
+        <input type="text" id="live-topic" placeholder="Leave blank to let it suggest a topic">
+      </div>
+      <div class="field-row">
+        <div class="field" style="margin-bottom:0;">
+          <label>How long will you go live?</label>
+          <select id="live-duration">
+            <option value="short">10-15 minutes</option>
+            <option value="medium" selected>15-30 minutes</option>
+            <option value="long">30+ minutes</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Tone</label>
+          <select id="live-tone">
+            <option value="hype">Hype / high-energy</option>
+            <option value="casual" selected>Casual &amp; friendly</option>
+            <option value="humorous">Light-hearted</option>
+            <option value="informative">Informative</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" id="live-generate-btn" onclick="generateLiveScript()">✨ Generate Live Script</button>
+      <div id="live-status" class="mono" style="font-size:11px;margin-top:8px;"></div>
+      <div id="live-output"></div>
+      <div class="btn-row" id="live-actions" style="display:none;margin-top:10px;">
+        <button class="btn ghost small" onclick="copyLiveOutput()">Copy Text</button>
+        <button class="btn small" onclick="saveLiveToBoard(event)">+ Add to Board</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>LOADOUT · your data is stored privately for you, only visible in this app</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3 id="modal-title">New Post</h3>
+    <input type="hidden" id="f-id">
+    <div class="field">
+      <label>Title / Idea</label>
+      <input type="text" id="f-title" placeholder="e.g. PUBG clutch 1v4 highlight">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Game</label>
+        <select id="f-game">
+          <option value="efootball">eFootball</option>
+          <option value="tsushima">Ghost of Tsushima</option>
+          <option value="pubg">PUBG</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Platform</label>
+        <select id="f-platform">
+          <option value="instagram">Instagram</option>
+          <option value="facebook">Facebook</option>
+          <option value="tiktok">TikTok</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Status</label>
+        <select id="f-status">
+          <option value="idea">Idea</option>
+          <option value="draft">Draft</option>
+          <option value="ready">Ready</option>
+          <option value="posted">Posted</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Format</label>
+        <select id="f-format">
+          <option value="Post">Post / Carousel</option>
+          <option value="Reel">Reel</option>
+          <option value="Story">Story</option>
+          <option value="Live">Live</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Date</label>
+      <input type="date" id="f-date">
+    </div>
+    <div class="field">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+        <label style="margin-bottom:0;">Caption</label>
+        <button class="btn ghost small" id="draft-ai-btn" onclick="draftWithAI()" type="button">✨ Draft with AI</button>
+      </div>
+      <textarea id="f-caption" placeholder="Caption / hashtags..."></textarea>
+      <div id="ai-time-hint" class="mono" style="font-size:11px;color:var(--gold);margin-top:5px;display:none;"></div>
+    </div>
+    <div class="field">
+      <label>Notes</label>
+      <textarea id="f-notes" placeholder="Shot list, editing notes, reminders..."></textarea>
+    </div>
+    <div class="field">
+      <label>Performance (once posted)</label>
+      <div class="metrics-row">
+        <input type="number" min="0" id="f-likes" placeholder="Likes">
+        <input type="number" min="0" id="f-comments" placeholder="Comments">
+        <input type="number" min="0" id="f-shares" placeholder="Shares">
+        <input type="number" min="0" id="f-views" placeholder="Views">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="delete-btn" onclick="deletePost()" style="display:none;">Delete</button>
+      <div class="right">
+        <button class="btn ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn" onclick="savePost()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- Icons ---------------- */
+const ICONS = {
+  efootball: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/></svg>',
+  tsushima: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20 L18 6 M15 3l3 3-2 2-3-3z"/><path d="M4 20l2-5"/></svg>',
+  pubg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>',
+  instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>',
+  facebook: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V6h-3c-2 0-3.5 1.5-3.5 3.5V12H8v3h2.5v6h3v-6H16l.5-3h-3v-2c0-.6.4-1 1-1z"/></svg>',
+  tiktok: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.4 2 2 3.6 4 3.9v3c-1.4 0-2.8-.4-4-1.2V15a5.5 5.5 0 1 1-5.5-5.5c.3 0 .6 0 .9.1v3.1a2.5 2.5 0 1 0 1.7 2.4V3z"/></svg>',
+  idea: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11.2c.5.3.8.9.8 1.5V16h4.4v-.3c0-.6.3-1.2.8-1.5A6 6 0 0 0 12 3z"/></svg>',
+  draft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+  ready: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2 4 5v6c0 5 3.4 8.4 8 10 4.6-1.6 8-5 8-10V5z"/><path d="M9 12l2 2 4-4"/></svg>',
+  posted: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg>'
+};
+const GAME_LABEL = {efootball:'eFootball', tsushima:'Tsushima', pubg:'PUBG'};
+const PLATFORM_LABEL = {instagram:'Instagram', facebook:'Facebook', tiktok:'TikTok'};
+const STATUSES = ['idea','draft','ready','posted'];
+const STATUS_LABEL = {idea:'Idea', draft:'Draft', ready:'Ready', posted:'Posted'};
+
+let posts = [];
+let editingId = null;
+let calDate = new Date();
+let sortKey = 'date';
+let sortDir = -1;
+
+/* ---------------- Storage ---------------- */
+/* ---------------- Storage adapter (Claude artifact storage, falling back to localStorage) ---------------- */
+async function storageGet(key){
+  try{
+    if(window.storage){
+      const res = await window.storage.get(key, false);
+      return res ? res.value : null;
+    }
+  }catch(e){ /* key not found or window.storage unavailable — fall through */ }
+  try{ return localStorage.getItem(key); }catch(e){ return null; }
+}
+async function storageSet(key, value){
+  try{
+    if(window.storage){
+      await window.storage.set(key, value, false);
+      return;
+    }
+  }catch(e){ /* fall through */ }
+  try{ localStorage.setItem(key, value); }catch(e){}
+}
+
+async function loadPosts(){
+  const raw = await storageGet('loadout:posts');
+  posts = raw ? JSON.parse(raw) : [];
+  renderAll();
+}
+async function savePostsToStorage(){
+  await storageSet('loadout:posts', JSON.stringify(posts));
+}
+
+function uid(){ return 'p_' + Math.random().toString(36).slice(2,10); }
+
+/* ---------------- Modal ---------------- */
+function openModal(post){
+  editingId = post ? post.id : null;
+  document.getElementById('modal-title').textContent = post ? 'Edit Post' : 'New Post';
+  document.getElementById('delete-btn').style.display = post ? 'inline-block' : 'none';
+  document.getElementById('f-title').value = post ? post.title : '';
+  document.getElementById('f-game').value = post ? post.game : 'pubg';
+  document.getElementById('f-platform').value = post ? post.platform : 'instagram';
+  document.getElementById('f-status').value = post ? post.status : 'idea';
+  document.getElementById('f-format').value = post ? (post.format || 'Post') : 'Post';
+  document.getElementById('f-date').value = post ? post.date : (window._prefillDate || '');
+  document.getElementById('f-caption').value = post ? post.caption : '';
+  document.getElementById('f-notes').value = post ? post.notes : '';
+  document.getElementById('f-likes').value = post && post.metrics ? post.metrics.likes ?? '' : '';
+  document.getElementById('f-comments').value = post && post.metrics ? post.metrics.comments ?? '' : '';
+  document.getElementById('f-shares').value = post && post.metrics ? post.metrics.shares ?? '' : '';
+  document.getElementById('f-views').value = post && post.metrics ? post.metrics.views ?? '' : '';
+  window._prefillDate = null;
+  document.getElementById('ai-time-hint').style.display = 'none';
+  document.getElementById('overlay').classList.add('active');
+}
+function closeModal(){
+  document.getElementById('overlay').classList.remove('active');
+  editingId = null;
+}
+async function savePost(){
+  const title = document.getElementById('f-title').value.trim();
+  if(!title){ document.getElementById('f-title').focus(); return; }
+  const data = {
+    id: editingId || uid(),
+    title,
+    game: document.getElementById('f-game').value,
+    platform: document.getElementById('f-platform').value,
+    status: document.getElementById('f-status').value,
+    format: document.getElementById('f-format').value,
+    date: document.getElementById('f-date').value || new Date().toISOString().slice(0,10),
+    caption: document.getElementById('f-caption').value,
+    notes: document.getElementById('f-notes').value,
+    metrics: {
+      likes: +document.getElementById('f-likes').value || 0,
+      comments: +document.getElementById('f-comments').value || 0,
+      shares: +document.getElementById('f-shares').value || 0,
+      views: +document.getElementById('f-views').value || 0
+    }
+  };
+  if(editingId){
+    posts = posts.map(p => p.id === editingId ? data : p);
+  }else{
+    posts.push(data);
+  }
+  await savePostsToStorage();
+  closeModal();
+  renderAll();
+}
+async function deletePost(){
+  if(!editingId) return;
+  posts = posts.filter(p => p.id !== editingId);
+  await savePostsToStorage();
+  closeModal();
+  renderAll();
+}
+
+/* ---------------- Tabs ---------------- */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('view-' + tab.dataset.view).classList.add('active');
+  });
+});
+
+/* ---------------- Stepper ---------------- */
+function stepperHTML(status){
+  const idx = STATUSES.indexOf(status);
+  let html = '<div class="stepper">';
+  STATUSES.forEach((s,i)=>{
+    const state = i < idx ? 'done' : (i===idx ? 'current' : '');
+    html += `<div class="node ${state}" title="${STATUS_LABEL[s]}">${ICONS[s]}</div>`;
+    if(i < STATUSES.length-1){
+      html += `<div class="bar ${i < idx ? 'done':''}"></div>`;
+    }
+  });
+  html += '</div>';
+  return html;
+}
+
+/* ---------------- Render: Dashboard ---------------- */
+function renderDashboard(){
+  const now = new Date();
+  const thisMonth = posts.filter(p=>{
+    const d = new Date(p.date+'T00:00:00');
+    return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
+  });
+  const postedPosts = posts.filter(p=>p.status==='posted');
+  const topPost = postedPosts.slice().sort((a,b)=>(b.metrics.views||0)-(a.metrics.views||0))[0];
+  const gameCounts = {efootball:0,tsushima:0,pubg:0};
+  posts.forEach(p=>gameCounts[p.game]++);
+  const topGame = Object.entries(gameCounts).sort((a,b)=>b[1]-a[1])[0];
+
+  document.getElementById('stat-cards').innerHTML = `
+    <div class="stat-card"><div class="label">Posts This Month</div><div class="value">${thisMonth.length}</div></div>
+    <div class="stat-card"><div class="label">Drafts In Progress</div><div class="value">${posts.filter(p=>p.status==='draft').length}</div></div>
+    <div class="stat-card"><div class="label">Top Performer</div><div class="value small">${topPost ? topPost.title : '—'}</div></div>
+    <div class="stat-card"><div class="label">Most Active Game</div><div class="value small">${posts.length ? GAME_LABEL[topGame[0]] + ' · ' + topGame[1] : '—'}</div></div>
+  `;
+
+  const upcoming = posts.filter(p=>p.status!=='posted' && p.date >= now.toISOString().slice(0,10))
+    .sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  document.getElementById('upcoming-list').innerHTML = upcoming.length ? upcoming.map(p=>`
+    <div class="list-row">
+      <div>
+        <div class="title">${escapeHtml(p.title)}</div>
+        <div class="mono" style="font-size:10.5px;color:var(--muted);margin-top:2px;">${p.date}</div>
+      </div>
+      <div class="meta">
+        <span class="tag ${p.game}">${ICONS[p.game]} ${GAME_LABEL[p.game]}</span>
+      </div>
+    </div>
+  `).join('') : '<div class="empty">Nothing scheduled. Add a post to fill your pipeline.</div>';
+
+  const attention = posts.filter(p=>p.status==='draft');
+  document.getElementById('attention-list').innerHTML = attention.length ? attention.map(p=>`
+    <div class="list-row">
+      <div class="title">${escapeHtml(p.title)}</div>
+      <span class="tag ${p.game}">${ICONS[p.game]} ${GAME_LABEL[p.game]}</span>
+    </div>
+  `).join('') : '<div class="empty">No drafts waiting. You\'re caught up.</div>';
+}
+
+/* ---------------- Render: Calendar ---------------- */
+function renderCalendar(){
+  const year = calDate.getFullYear(), month = calDate.getMonth();
+  document.getElementById('cal-label').textContent =
+    calDate.toLocaleDateString('en-US',{month:'long', year:'numeric'}).toUpperCase();
+  const first = new Date(year, month, 1);
+  const startDay = first.getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const daysInPrev = new Date(year, month, 0).getDate();
+  const todayStr = new Date().toISOString().slice(0,10);
+
+  let cells = [];
+  for(let i=startDay-1;i>=0;i--) cells.push({num: daysInPrev-i, out:true});
+  for(let d=1; d<=daysInMonth; d++) cells.push({num:d, out:false, dateStr: `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`});
+  while(cells.length % 7 !== 0) cells.push({num: cells.length - (startDay+daysInMonth) + 1, out:true});
+
+  const dow = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  let html = dow.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  cells.forEach(c=>{
+    const isToday = c.dateStr === todayStr;
+    const dayPosts = c.dateStr ? posts.filter(p=>p.date===c.dateStr) : [];
+    html += `<div class="cal-cell ${c.out?'out':''} ${isToday?'today':''}" ${c.dateStr?`onclick="dayClick('${c.dateStr}')"`:''}>
+      <div class="num">${c.num}</div>
+      ${dayPosts.map(p=>`<div class="cal-chip ${p.game}" onclick="event.stopPropagation();openModal(${JSON.stringify(p).replace(/"/g,'&quot;')})">${escapeHtml(p.title)}</div>`).join('')}
+    </div>`;
+  });
+  document.getElementById('cal-grid').innerHTML = html;
+}
+function shiftMonth(delta){
+  calDate = new Date(calDate.getFullYear(), calDate.getMonth()+delta, 1);
+  renderCalendar();
+}
+function dayClick(dateStr){
+  window._prefillDate = dateStr;
+  openModal();
+}
+
+/* ---------------- Render: Board ---------------- */
+function renderBoard(){
+  const board = document.getElementById('board');
+  board.innerHTML = STATUSES.map(status => `
+    <div class="col">
+      <div class="col-head">
+        <span>${STATUS_LABEL[status]}</span>
+        <span class="count mono">${posts.filter(p=>p.status===status).length}</span>
+      </div>
+      <div class="col-body" data-status="${status}">
+        ${posts.filter(p=>p.status===status).map(p=>`
+          <div class="card" draggable="true" data-id="${p.id}" onclick="openModal(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+            <div class="title">${escapeHtml(p.title)}</div>
+            <span class="tag ${p.game}">${ICONS[p.game]} ${GAME_LABEL[p.game]}</span>
+            <div class="row">
+              <span class="platform">${ICONS[p.platform]} ${PLATFORM_LABEL[p.platform]}</span>
+              <span class="mono" style="font-size:9.5px;color:var(--gold);">${escapeHtml(p.format||'Post')}</span>
+              <span class="date">${p.date}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+  attachDnd();
+}
+function attachDnd(){
+  document.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('dragstart', e=>{
+      e.dataTransfer.setData('text/plain', card.dataset.id);
+      setTimeout(()=>card.style.opacity='0.4',0);
+    });
+    card.addEventListener('dragend', ()=>{ card.style.opacity='1'; });
+  });
+  document.querySelectorAll('.col-body').forEach(col=>{
+    col.addEventListener('dragover', e=>{ e.preventDefault(); col.classList.add('drag-over'); });
+    col.addEventListener('dragleave', ()=>col.classList.remove('drag-over'));
+    col.addEventListener('drop', async e=>{
+      e.preventDefault();
+      col.classList.remove('drag-over');
+      const id = e.dataTransfer.getData('text/plain');
+      const status = col.dataset.status;
+      posts = posts.map(p => p.id===id ? {...p, status} : p);
+      await savePostsToStorage();
+      renderAll();
+    });
+  });
+}
+
+/* ---------------- Render: Tracker ---------------- */
+function renderTracker(){
+  const sorted = posts.slice().sort((a,b)=>{
+    let av = a[sortKey], bv = b[sortKey];
+    if(['likes','comments','shares','views'].includes(sortKey)){ av=a.metrics[sortKey]||0; bv=b.metrics[sortKey]||0; }
+    if(typeof av === 'string') return av.localeCompare(bv) * sortDir;
+    return (av-bv) * sortDir;
+  });
+  document.getElementById('tracker-empty').style.display = posts.length ? 'none' : 'block';
+  document.getElementById('tracker-body').innerHTML = sorted.map(p=>`
+    <tr onclick="openModal(${JSON.stringify(p).replace(/"/g,'&quot;')})" style="cursor:pointer;">
+      <td>${escapeHtml(p.title)}</td>
+      <td><span class="tag ${p.game}">${ICONS[p.game]} ${GAME_LABEL[p.game]}</span></td>
+      <td><span class="platform">${ICONS[p.platform]} ${PLATFORM_LABEL[p.platform]}</span></td>
+      <td class="mono">${escapeHtml(p.format||'Post')}</td>
+      <td class="mono">${p.date}</td>
+      <td class="num">${p.metrics.likes||0}</td>
+      <td class="num">${p.metrics.comments||0}</td>
+      <td class="num">${p.metrics.shares||0}</td>
+      <td class="num">${p.metrics.views||0}</td>
+    </tr>
+  `).join('');
+}
+document.querySelectorAll('th[data-sort]').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const key = th.dataset.sort;
+    if(sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
+    renderTracker();
+  });
+});
+
+/* ---------------- Ticker ---------------- */
+function renderTicker(){
+  const posted = posts.filter(p=>p.status==='posted').length;
+  const ready = posts.filter(p=>p.status==='ready').length;
+  const draft = posts.filter(p=>p.status==='draft').length;
+  document.getElementById('ticker').innerHTML = `
+    <span class="ticker-item">POSTED <b>${posted}</b></span>
+    <span class="ticker-item">READY <b>${ready}</b></span>
+    <span class="ticker-item">DRAFT <b>${draft}</b></span>
+    <span class="ticker-item">TOTAL <b>${posts.length}</b></span>
+  `;
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str || '';
+  return d.innerHTML;
+}
+
+/* ---------------- AI Coach ---------------- */
+const DEFAULT_MODEL = 'openrouter/free';
+let aiSettings = { apiKey: '', model: DEFAULT_MODEL };
+
+async function loadAISettings(){
+  try{
+    const raw = await storageGet('loadout:ai-settings');
+    if(raw) aiSettings = JSON.parse(raw);
+  }catch(e){ /* no settings saved yet */ }
+  document.getElementById('ai-api-key').value = aiSettings.apiKey || '';
+  document.getElementById('ai-model-input').value = aiSettings.model || DEFAULT_MODEL;
+}
+async function saveAISettings(){
+  aiSettings = {
+    apiKey: document.getElementById('ai-api-key').value.trim(),
+    model: document.getElementById('ai-model-input').value.trim() || DEFAULT_MODEL
+  };
+  await storageSet('loadout:ai-settings', JSON.stringify(aiSettings));
+  const status = document.getElementById('ai-settings-status');
+  status.style.display = 'block';
+  setTimeout(()=>status.style.display='none', 2000);
+}
+async function testConnection(){
+  const btn = document.getElementById('test-conn-btn');
+  const statusEl = document.getElementById('test-conn-status');
+  await saveAISettings();
+  btn.disabled = true; btn.textContent = 'Testing...';
+  statusEl.style.color = 'var(--muted)';
+  statusEl.textContent = 'Connecting...';
+  try{
+    const reply = await callClaude('Reply with exactly one short sentence confirming you are connected.', 60);
+    statusEl.style.color = 'var(--efootball)';
+    statusEl.textContent = '✓ Connected — model replied: ' + reply.trim().slice(0,120);
+  }catch(e){
+    statusEl.style.color = 'var(--tsushima)';
+    statusEl.textContent = '✕ ' + (e.message || 'Connection failed.');
+  }
+  btn.disabled = false; btn.textContent = 'Test Connection';
+}
+
+let pageStats = { instagram:0, facebook:0, tiktok:0, notes:'' };
+async function loadPageStats(){
+  try{
+    const raw = await storageGet('loadout:page-stats');
+    if(raw) pageStats = JSON.parse(raw);
+  }catch(e){ /* no stats saved yet */ }
+  document.getElementById('ps-instagram').value = pageStats.instagram || '';
+  document.getElementById('ps-facebook').value = pageStats.facebook || '';
+  document.getElementById('ps-tiktok').value = pageStats.tiktok || '';
+  document.getElementById('ps-notes').value = pageStats.notes || '';
+}
+async function savePageStats(){
+  pageStats = {
+    instagram: +document.getElementById('ps-instagram').value || 0,
+    facebook: +document.getElementById('ps-facebook').value || 0,
+    tiktok: +document.getElementById('ps-tiktok').value || 0,
+    notes: document.getElementById('ps-notes').value.trim()
+  };
+  await storageSet('loadout:page-stats', JSON.stringify(pageStats));
+  const status = document.getElementById('ps-status');
+  status.style.display = 'inline';
+  setTimeout(()=>status.style.display='none', 2000);
+}
+
+async function callClaude(promptText, maxTokens){
+  if(!aiSettings.apiKey){
+    throw new Error('Add your free OpenRouter API key in AI Settings above first.');
+  }
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + aiSettings.apiKey
+    },
+    body: JSON.stringify({
+      model: aiSettings.model || DEFAULT_MODEL,
+      max_tokens: maxTokens || 1000,
+      messages: [{ role: "user", content: promptText }]
+    })
+  });
+  if(!response.ok){
+    const errBody = await response.text();
+    throw new Error(`OpenRouter error ${response.status}: ${errBody.slice(0,200)}`);
+  }
+  const data = await response.json();
+  const content = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : '';
+  if(!content) throw new Error('Empty response from model — try again or switch model.');
+  return content;
+}
+function parseJsonSafe(raw){
+  let cleaned = raw.replace(/```json/gi,'').replace(/```/g,'').trim();
+  try{
+    return JSON.parse(cleaned);
+  }catch(e){
+    // Fallback 1: extract the first balanced [...] or {...} block from surrounding text
+    const arrayMatch = cleaned.match(/\[[\s\S]*\]/);
+    const objectMatch = cleaned.match(/\{[\s\S]*\}/);
+    const candidate = arrayMatch ? arrayMatch[0] : (objectMatch ? objectMatch[0] : cleaned);
+    try{
+      return JSON.parse(candidate);
+    }catch(e2){
+      // Fallback 2: response was likely truncated mid-array. Salvage the last
+      // fully-closed element and close the array there instead of failing.
+      return repairTruncatedJsonArray(candidate);
+    }
+  }
+}
+function repairTruncatedJsonArray(text){
+  const start = text.indexOf('[');
+  if(start === -1) throw new Error('AI response was not valid JSON and could not be repaired.');
+  let depth = 0, lastGoodEnd = -1, inStr = false, strChar = '', escape = false;
+  for(let i = start; i < text.length; i++){
+    const ch = text[i];
+    if(inStr){
+      if(escape){ escape = false; }
+      else if(ch === '\\'){ escape = true; }
+      else if(ch === strChar){ inStr = false; }
+      continue;
+    }
+    if(ch === '"'){ inStr = true; strChar = ch; continue; }
+    if(ch === '[' || ch === '{') depth++;
+    if(ch === ']' || ch === '}'){
+      depth--;
+      if(depth === 1 && ch === '}') lastGoodEnd = i;
+      if(depth === 0){ lastGoodEnd = i; break; }
+    }
+  }
+  if(lastGoodEnd === -1) throw new Error('AI response was cut off before any complete item was returned. Try again.');
+  return JSON.parse(text.slice(start, lastGoodEnd + 1) + ']');
+}
+
+async function generateIdeas(){
+  const btn = document.getElementById('ai-idea-btn');
+  const resultsEl = document.getElementById('ai-idea-results');
+  const gameSel = document.getElementById('ai-idea-game').value;
+  const formatSel = document.getElementById('ai-idea-format').value;
+  const count = document.getElementById('ai-idea-count').value;
+  const gameText = gameSel === 'all' ? 'eFootball, Ghost of Tsushima, and PUBG' : GAME_LABEL[gameSel];
+  const formatText = {any:'a mix of Reels, Stories, and standard posts/carousels', reel:'mostly Reels (short vertical video)', story:'mostly Stories', post:'mostly standard feed posts/carousels'}[formatSel];
+  btn.disabled = true; btn.textContent = 'Generating...';
+  resultsEl.innerHTML = '<div class="loading-text">Thinking through post ideas...</div>';
+  try{
+    const prompt = `You are an experienced social media growth manager for a solo gaming content creator who posts on Instagram, Facebook and TikTok about: ${gameText}.
+Generate ${count} concrete post ideas focused on: ${gameText}. Favor ${formatText}.
+Respond ONLY with raw JSON (no markdown fences, no preamble), an array of exactly ${count} objects with keys:
+"title" (short punchy post title, under 12 words),
+"format" (exactly one of "Reel", "Story", or "Post"),
+"hook" (1-2 sentences on the angle/why it will grab attention),
+"visual" (what exactly to film or screenshot — realistic to capture solo, e.g. "Screen-record the final minute of a comeback match"),
+"caption" (a short draft caption, 1-2 sentences, in the creator's casual gamer voice),
+"game" (one of "efootball","tsushima","pubg" matching the idea),
+"platform" (one of "instagram","facebook","tiktok" — the best fit),
+"time" (a suggested posting time window, e.g. "Weekday 7-9pm"),
+"edit_tip" (1 short sentence of concrete editing/cover-image advice specific to this idea).`;
+    const raw = await callClaude(prompt, 2000);
+    const ideas = parseJsonSafe(raw);
+    resultsEl.innerHTML = ideas.map((idea,i)=>`
+      <div class="ai-card">
+        <span class="tag ${idea.game}" style="margin-bottom:6px;">${ICONS[idea.game]} ${escapeHtml(idea.format||'')}</span>
+        <div class="title">${escapeHtml(idea.title)}</div>
+        <div class="hook">${escapeHtml(idea.hook)}</div>
+        <div style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:0.06em;font-family:'Oswald',sans-serif;margin-top:8px;">Film / capture</div>
+        <div class="hook" style="margin-bottom:0;">${escapeHtml(idea.visual||'')}</div>
+        <div style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:0.06em;font-family:'Oswald',sans-serif;margin-top:8px;">Caption draft</div>
+        <div class="hook" style="margin-bottom:0;font-style:italic;">"${escapeHtml(idea.caption||'')}"</div>
+        <div class="meta-row" style="margin-top:10px;">
+          <span class="tag ${idea.game}">${ICONS[idea.game]} ${GAME_LABEL[idea.game]}</span>
+          <span class="platform">${ICONS[idea.platform]} ${PLATFORM_LABEL[idea.platform]}</span>
+        </div>
+        <div class="time">Best time: ${escapeHtml(idea.time)}</div>
+        ${idea.edit_tip ? `<div class="hook" style="margin-top:6px;margin-bottom:0;color:var(--paper);"><strong style="color:var(--gold);">Edit tip:</strong> ${escapeHtml(idea.edit_tip)}</div>` : ''}
+        <div class="btn-row" style="margin-top:8px;">
+          <button class="btn small ghost" onclick='addIdeaToBoard(${JSON.stringify(idea).replace(/'/g,"&#39;")})'>+ Add to Idea column</button>
+          <button class="btn small" onclick='sendIdeaToWriter(${JSON.stringify(idea).replace(/'/g,"&#39;")})'>✍️ Send to Post Writer</button>
+        </div>
+      </div>
+    `).join('');
+  }catch(e){
+    console.error('Idea generation failed:', e);
+    resultsEl.innerHTML = `<div class="empty">Couldn't generate ideas right now (${escapeHtml(e.message||'unknown error')}). Try again in a moment.</div>`;
+  }
+  btn.disabled = false; btn.textContent = '✨ Generate Ideas';
+}
+
+async function addIdeaToBoard(idea){
+  const post = {
+    id: uid(),
+    title: idea.title,
+    game: idea.game,
+    platform: idea.platform,
+    status: 'idea',
+    date: new Date().toISOString().slice(0,10),
+    caption: idea.caption || '',
+    notes: `${idea.hook}\nFormat: ${idea.format}\nFilm: ${idea.visual||''}\nSuggested time: ${idea.time}${idea.edit_tip ? '\nEdit tip: ' + idea.edit_tip : ''}`,
+    metrics: {likes:0,comments:0,shares:0,views:0}
+  };
+  posts.push(post);
+  await savePostsToStorage();
+  renderAll();
+}
+
+async function generateWeeklyPlan(){
+  const btn = document.getElementById('ai-plan-btn');
+  const resultsEl = document.getElementById('ai-plan-results');
+  btn.disabled = true; btn.textContent = 'Generating...';
+  resultsEl.innerHTML = '<div class="loading-text">Building your 7-day plan...</div>';
+  try{
+    const prompt = `You are a social media growth manager for a solo gaming creator who posts about eFootball, Ghost of Tsushima, and PUBG across Instagram, Facebook and TikTok. Facebook is currently their best-performing platform by views.
+Build a 7-day plan (Monday through Sunday). EVERY day, all three platforms (instagram, facebook, tiktok) are active, and each platform runs a DIFFERENT one of the three games that day (a 1-to-1 pairing of platform to game, all three games used every day). Rotate which game is paired with which platform from day to day, so across the week each game appears on each platform at least once or twice — don't repeat the same pairing every day.
+For each platform-game pairing on a given day, generate between 2 and 4 short post ideas with a suggested posting time each.
+Keep every "idea" string under 6 words and every "time" string under 4 words — be extremely concise, this response must stay compact.
+Respond ONLY with raw, compact, valid JSON (no markdown fences, no extra whitespace, no trailing commas, no commentary): an array of 7 objects (Monday-Sunday, in order) with keys:
+"day" (e.g. "Monday"),
+"slots" (array of exactly 3 objects, one per platform, each with: "platform" (one of "instagram","facebook","tiktok"), "game" (one of "efootball","tsushima","pubg"), "posts" (array of 2-4 objects, each with "idea" and "time")).`;
+    const raw = await callClaude(prompt, 3500);
+    const plan = parseJsonSafe(raw);
+    const note = plan.length < 7 ? `<div class="empty" style="margin-bottom:10px;">Response was cut short — showing ${plan.length} of 7 days. Click Generate again for the rest.</div>` : '';
+    resultsEl.innerHTML = note + plan.map(day=>`
+      <div class="plan-day" style="align-items:flex-start;flex-direction:column;">
+        <div class="dow" style="width:auto;margin-bottom:8px;color:var(--paper);font-size:14px;">${day.day.toUpperCase()}</div>
+        <div style="width:100%;display:flex;flex-direction:column;gap:12px;">
+          ${(day.slots||[]).map(slot=>`
+            <div style="border-left:2px solid var(--line);padding-left:12px;">
+              <div class="meta-row" style="margin-bottom:6px;">
+                <span class="platform">${ICONS[slot.platform]} ${PLATFORM_LABEL[slot.platform]}</span>
+                <span class="tag ${slot.game}">${ICONS[slot.game]} ${GAME_LABEL[slot.game]}</span>
+                <span class="mono" style="font-size:10.5px;color:var(--muted);">${(slot.posts||[]).length} posts</span>
+              </div>
+              ${(slot.posts||[]).map(p=>`
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:3px 0;">
+                  <div>
+                    <div class="idea">${escapeHtml(p.idea)}</div>
+                    <div class="sub mono" style="color:var(--gold);">${escapeHtml(p.time||'')}</div>
+                  </div>
+                  <button class="btn small ghost" onclick='addPlanItemToCalendar(${JSON.stringify({day:day.day,platform:slot.platform,game:slot.game,idea:p.idea,time:p.time}).replace(/'/g,"&#39;")})'>+ Add</button>
+                </div>
+              `).join('')}
+              <button class="btn small ghost" style="margin-top:4px;" onclick='addAllSlotToCalendar(${JSON.stringify({day:day.day,platform:slot.platform,game:slot.game,posts:slot.posts}).replace(/'/g,"&#39;")})'>+ Add all</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+  }catch(e){
+    console.error('Weekly plan generation failed:', e);
+    resultsEl.innerHTML = `<div class="empty">Couldn't generate the plan right now (${escapeHtml(e.message||'unknown error')}). Try again in a moment.</div>`;
+  }
+  btn.disabled = false; btn.textContent = '✨ Generate Weekly Plan';
+}
+
+function dateForDay(dayName){
+  const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const targetIdx = dayNames.findIndex(d=>d.toLowerCase()===dayName.toLowerCase());
+  const now = new Date();
+  const currentIdx = now.getDay();
+  let diff = targetIdx - currentIdx;
+  if(diff < 0) diff += 7;
+  const targetDate = new Date(now);
+  targetDate.setDate(now.getDate() + diff);
+  return targetDate.toISOString().slice(0,10);
+}
+
+async function addPlanItemToCalendar(item){
+  const dateStr = dateForDay(item.day);
+  posts.push({
+    id: uid(),
+    title: item.idea,
+    game: item.game,
+    platform: item.platform,
+    status: 'idea',
+    date: dateStr,
+    caption: '',
+    notes: `Suggested time: ${item.time}`,
+    metrics: {likes:0,comments:0,shares:0,views:0}
+  });
+  await savePostsToStorage();
+  renderAll();
+}
+
+async function addAllSlotToCalendar(slot){
+  const dateStr = dateForDay(slot.day);
+  (slot.posts||[]).forEach(p=>{
+    posts.push({
+      id: uid(),
+      title: p.idea,
+      game: slot.game,
+      platform: slot.platform,
+      status: 'idea',
+      date: dateStr,
+      caption: '',
+      notes: `Suggested time: ${p.time}`,
+      metrics: {likes:0,comments:0,shares:0,views:0}
+    });
+  });
+  await savePostsToStorage();
+  renderAll();
+}
+
+async function generateGrowthTips(){
+  const btn = document.getElementById('ai-tips-btn');
+  const resultsEl = document.getElementById('ai-tips-results');
+  btn.disabled = true; btn.textContent = 'Analyzing...';
+  resultsEl.innerHTML = '<div class="loading-text">Reviewing your posting activity...</div>';
+  try{
+    const gameCounts = {efootball:0,tsushima:0,pubg:0};
+    const platformStats = {
+      instagram:{count:0,views:[]},
+      facebook:{count:0,views:[]},
+      tiktok:{count:0,views:[]}
+    };
+    posts.forEach(p=>{
+      gameCounts[p.game]++;
+      platformStats[p.platform].count++;
+      if(p.status==='posted') platformStats[p.platform].views.push(p.metrics.views||0);
+    });
+    const platformSummary = Object.entries(platformStats).map(([plat, s])=>{
+      if(!s.views.length) return `${PLATFORM_LABEL[plat]}: ${s.count} posts logged, none posted yet.`;
+      const avg = Math.round(s.views.reduce((a,b)=>a+b,0)/s.views.length);
+      const min = Math.min(...s.views), max = Math.max(...s.views);
+      return `${PLATFORM_LABEL[plat]}: ${s.views.length} posted, views range ${min}-${max} (avg ${avg}).`;
+    }).join(' ');
+    const postedCount = posts.filter(p=>p.status==='posted').length;
+    const statsLine = `Current real follower counts — Instagram: ${pageStats.instagram||0}, Facebook: ${pageStats.facebook||0}, TikTok: ${pageStats.tiktok||0}.${pageStats.notes ? ' Extra context: ' + pageStats.notes : ''}`;
+    const summary = `${statsLine}
+Total posts logged in the tracker: ${posts.length}. Posted: ${postedCount}.
+Posts by game: eFootball ${gameCounts.efootball}, Ghost of Tsushima ${gameCounts.tsushima}, PUBG ${gameCounts.pubg}.
+Per-platform view performance (from logged posts): ${platformSummary}`;
+    const prompt = `You are an experienced social media growth manager reviewing a solo gaming creator's activity. Here is their current data:
+${summary}
+The creator specifically reports Facebook views are wildly inconsistent — some posts reach around 1,000 views, others as low as 26 — despite similar content. Diagnose the most likely causes of that inconsistency (e.g. native video vs re-uploaded/watermarked content, weak hook in the first 3 seconds, low early engagement velocity, inconsistent posting cadence, posting time misaligned with audience, over-reliance on links or off-platform CTAs) and give direct, specific fixes.
+Respond ONLY with raw compact JSON (no markdown fences, no commentary): an object with keys:
+"strengths" (array of 2-3 short strings on what's working),
+"fb_diagnosis" (array of 2-3 short strings on the most likely causes of the FB view inconsistency),
+"fixes" (array of 3-4 short, specific, actionable strings, prioritizing Facebook reach consistency),
+"next_step" (one short string: the single highest-priority action to take this week).`;
+    const raw = await callClaude(prompt, 1200);
+    const tips = parseJsonSafe(raw);
+    resultsEl.innerHTML = `
+      <div class="tips-block">
+        <h4>What's working</h4>
+        <ul>${tips.strengths.map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>
+        <h4>Why Facebook views swing so much</h4>
+        <ul>${(tips.fb_diagnosis||[]).map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>
+        <h4>What to fix</h4>
+        <ul>${tips.fixes.map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ul>
+        <h4>This week's priority</h4>
+        <div style="color:var(--gold);">${escapeHtml(tips.next_step)}</div>
+      </div>
+    `;
+  }catch(e){
+    console.error('Growth tips generation failed:', e);
+    resultsEl.innerHTML = `<div class="empty">Couldn't analyze right now (${escapeHtml(e.message||'unknown error')}). Try again in a moment.</div>`;
+  }
+  btn.disabled = false; btn.textContent = '✨ Analyze & Advise';
+}
+
+async function generateRoadmap(){
+  const btn = document.getElementById('ai-roadmap-btn');
+  const resultsEl = document.getElementById('ai-roadmap-results');
+  btn.disabled = true; btn.textContent = 'Building...';
+  resultsEl.innerHTML = '<div class="loading-text">Mapping out the next 30 days...</div>';
+  try{
+    const prompt = `You are a social media growth manager building a 30-day system for a solo gaming creator (eFootball, Ghost of Tsushima, PUBG) posting on Instagram, Facebook and TikTok, aiming to gain as many followers as possible this month.
+Their current real follower counts: Instagram ${pageStats.instagram||0}, Facebook ${pageStats.facebook||0}, TikTok ${pageStats.tiktok||0}.${pageStats.notes ? ' Extra context: ' + pageStats.notes : ''}
+They report Facebook views swing wildly (26 to 1,000+) on similar content, which needs fixing as part of this plan.
+Be realistic: do not promise a guaranteed follower number. Frame this as a disciplined system that maximizes their odds, built around what these platforms actually reward (native video, strong hooks in the first seconds, fast early engagement, consistency, replying to comments quickly, avoiding off-platform links in captions).
+Respond ONLY with raw compact JSON (no markdown fences, no commentary): an object with keys:
+"disclaimer" (one short honest sentence that growth depends on many factors and isn't guaranteed),
+"weeks" (array of exactly 4 objects, each with "week" (e.g. "Week 1"), "focus" (short theme, under 8 words), "actions" (array of 3-4 short concrete action strings for that week)).`;
+    const raw = await callClaude(prompt, 1500);
+    const roadmap = parseJsonSafe(raw);
+    resultsEl.innerHTML = `
+      <div class="empty" style="margin-bottom:12px;">${escapeHtml(roadmap.disclaimer||'')}</div>
+      ${(roadmap.weeks||[]).map(w=>`
+        <div class="ai-card">
+          <div class="title">${escapeHtml(w.week)} — ${escapeHtml(w.focus)}</div>
+          <ul style="margin:6px 0 0 18px;padding:0;font-size:12.5px;color:var(--paper);">
+            ${(w.actions||[]).map(a=>`<li style="margin-bottom:3px;">${escapeHtml(a)}</li>`).join('')}
+          </ul>
+        </div>
+      `).join('')}
+    `;
+  }catch(e){
+    console.error('Roadmap generation failed:', e);
+    resultsEl.innerHTML = `<div class="empty">Couldn't build the roadmap right now (${escapeHtml(e.message||'unknown error')}). Try again in a moment.</div>`;
+  }
+  btn.disabled = false; btn.textContent = '✨ Build Roadmap';
+}
+
+async function draftWithAI(){
+  const btn = document.getElementById('draft-ai-btn');
+  const title = document.getElementById('f-title').value.trim();
+  if(!title){ document.getElementById('f-title').focus(); return; }
+  const game = document.getElementById('f-game').value;
+  const platform = document.getElementById('f-platform').value;
+  btn.disabled = true; btn.textContent = 'Drafting...';
+  try{
+    const prompt = `You are a social media manager writing a caption for a gaming creator.
+Post title/idea: "${title}"
+Game: ${GAME_LABEL[game]}
+Platform: ${PLATFORM_LABEL[platform]}
+Respond ONLY with raw JSON (no markdown fences), an object with keys:
+"caption" (an engaging caption in the creator's voice, 1-3 short sentences, no hashtags in this field),
+"hashtags" (a single string of 6-8 relevant space-separated hashtags),
+"best_time" (a short suggested posting time window for this platform, e.g. "Weeknights 7-9pm").`;
+    const raw = await callClaude(prompt);
+    const draft = parseJsonSafe(raw);
+    document.getElementById('f-caption').value = draft.caption + '\n\n' + draft.hashtags;
+    const hint = document.getElementById('ai-time-hint');
+    hint.textContent = 'Suggested time to post: ' + draft.best_time;
+    hint.style.display = 'block';
+  }catch(e){
+    console.error('Draft with AI failed:', e);
+    alert("Couldn't generate a draft right now (" + (e.message||'unknown error') + "). Try again in a moment.");
+  }
+  btn.disabled = false; btn.textContent = '✨ Draft with AI';
+}
+
+function setStatus(el, msg, kind){
+  el.textContent = msg || '';
+  el.style.color = kind === 'err' ? 'var(--tsushima)' : (kind === 'ok' ? 'var(--efootball)' : 'var(--muted)');
+}
+function extractSection(text, label, allLabels){
+  const others = allLabels.filter(l=>l!==label).join('|');
+  const re = new RegExp(label + ':\\s*([\\s\\S]*?)(?:\\n\\s*(?:' + others + '):|$)', 'i');
+  const m = text.match(re);
+  return m ? m[1].trim() : '';
+}
+
+/* ---------------- Post Writer (Dispatch) ---------------- */
+function sendIdeaToWriter(idea){
+  document.getElementById('writer-idea').value = `${idea.title} — ${idea.hook}${idea.visual ? '\nFilm: ' + idea.visual : ''}${idea.caption ? '\nCaption angle: ' + idea.caption : ''}`;
+  document.getElementById('writer-format').value = idea.format || 'Post';
+  document.getElementById('writer-game').value = idea.game;
+  document.getElementById('writer-platform').value = idea.platform;
+  const banner = document.getElementById('writer-link-banner');
+  document.getElementById('writer-link-text').textContent = 'Linked from Idea Generator: ' + idea.title;
+  banner.style.display = 'flex';
+  document.querySelector('.tab[data-view="writer"]').click();
+  window.scrollTo(0,0);
+}
+
+async function generateDispatch(){
+  const btn = document.getElementById('writer-generate-btn');
+  const statusEl = document.getElementById('writer-status');
+  const outputEl = document.getElementById('writer-output');
+  const idea = document.getElementById('writer-idea').value.trim();
+  const format = document.getElementById('writer-format').value;
+  const tone = document.getElementById('writer-tone').value;
+  const game = document.getElementById('writer-game').value;
+  const platform = document.getElementById('writer-platform').value;
+  if(!idea){ setStatus(statusEl, 'Please enter an idea or topic first.', 'err'); return; }
+  btn.disabled = true;
+  setStatus(statusEl, 'Writing your post...', '');
+  outputEl.innerHTML = '';
+  document.getElementById('writer-actions').style.display = 'none';
+  try{
+    const prompt = `You are a social media copywriting assistant helping a solo gaming creator (posts about ${GAME_LABEL[game]}) write their own ${format} for ${PLATFORM_LABEL[platform]}. Write copy that sounds like a real gamer speaking honestly to their community, never salesy or robotic.
+Idea/topic: ${idea}
+Tone: ${tone}
+Structure your response clearly with these labeled sections, plain text, no markdown symbols:
+HOOK: (first line to stop the scroll)
+CAPTION: (the full caption/body text, or a short scene-by-scene script if it's a Reel)
+VISUAL: (exactly what to film or screenshot — realistic to capture solo, describe the specific shot)
+CTA: (one clear call to action, e.g. a question or invitation to comment)
+HASHTAGS: (5 to 8 relevant hashtags)`;
+    const content = await callClaude(prompt, 900);
+    const labels = ['HOOK','CAPTION','VISUAL','CTA','HASHTAGS'];
+    const hook = extractSection(content, 'HOOK', labels);
+    const caption = extractSection(content, 'CAPTION', labels);
+    const visual = extractSection(content, 'VISUAL', labels);
+    const cta = extractSection(content, 'CTA', labels);
+    const hashtags = extractSection(content, 'HASHTAGS', labels);
+    window._dispatchResult = {hook, caption, visual, cta, hashtags, raw: content};
+    outputEl.innerHTML = `
+      <div class="ai-card" style="margin-top:14px;">
+        ${hook ? `<div style="font-size:11px;color:var(--gold);text-transform:uppercase;font-family:'Oswald',sans-serif;">Hook</div><div class="hook" style="margin-bottom:8px;">${escapeHtml(hook)}</div>` : ''}
+        ${caption ? `<div style="font-size:11px;color:var(--gold);text-transform:uppercase;font-family:'Oswald',sans-serif;">Caption</div><div class="hook" style="margin-bottom:8px;white-space:pre-wrap;">${escapeHtml(caption)}</div>` : ''}
+        ${visual ? `<div style="font-size:11px;color:var(--gold);text-transform:uppercase;font-family:'Oswald',sans-serif;">Film / capture</div><div class="hook" style="margin-bottom:8px;">${escapeHtml(visual)}</div>` : ''}
+        ${cta ? `<div style="font-size:11px;color:var(--gold);text-transform:uppercase;font-family:'Oswald',sans-serif;">Call to action</div><div class="hook" style="margin-bottom:8px;">${escapeHtml(cta)}</div>` : ''}
+        ${hashtags ? `<div style="font-size:11px;color:var(--gold);text-transform:uppercase;font-family:'Oswald',sans-serif;">Hashtags</div><div class="hook mono" style="margin-bottom:0;">${escapeHtml(hashtags)}</div>` : ''}
+        ${!hook && !caption ? `<div class="hook" style="white-space:pre-wrap;">${escapeHtml(content)}</div>` : ''}
+      </div>
+    `;
+    document.getElementById('writer-actions').style.display = 'flex';
+    setStatus(statusEl, '', '');
+  }catch(e){
+    console.error('Dispatch generation failed:', e);
+    setStatus(statusEl, e.message || 'Something went wrong.', 'err');
+  }
+  btn.disabled = false;
+}
+
+function copyWriterOutput(){
+  const r = window._dispatchResult;
+  if(!r) return;
+  const text = [r.hook, r.caption, r.visual ? 'Film: ' + r.visual : '', r.cta, r.hashtags].filter(Boolean).join('\n\n');
+  navigator.clipboard.writeText(text || r.raw || '');
+}
+
+async function addDispatchToBoard(evt){
+  const r = window._dispatchResult;
+  if(!r) return;
+  const idea = document.getElementById('writer-idea').value.trim();
+  const format = document.getElementById('writer-format').value;
+  const game = document.getElementById('writer-game').value;
+  const platform = document.getElementById('writer-platform').value;
+  posts.push({
+    id: uid(),
+    title: (idea.split('\n')[0] || idea).slice(0,80),
+    game, platform, format,
+    status: 'draft',
+    date: new Date().toISOString().slice(0,10),
+    caption: [r.caption, r.hashtags].filter(Boolean).join('\n\n'),
+    notes: [r.hook ? 'Hook: ' + r.hook : '', r.visual ? 'Film: ' + r.visual : '', r.cta ? 'CTA: ' + r.cta : ''].filter(Boolean).join('\n'),
+    metrics: {likes:0,comments:0,shares:0,views:0}
+  });
+  await savePostsToStorage();
+  renderAll();
+  const b = evt.target;
+  const original = b.textContent;
+  b.textContent = 'Added ✓';
+  setTimeout(()=>{ b.textContent = original; }, 1500);
+}
+
+/* ---------------- Comment Helper ---------------- */
+async function generateReplies(){
+  const btn = document.getElementById('comments-reply-btn');
+  const statusEl = document.getElementById('comments-reply-status');
+  const outputEl = document.getElementById('comments-reply-output');
+  const comment = document.getElementById('comments-input').value.trim();
+  if(!comment){ setStatus(statusEl, 'Please paste a comment first.', 'err'); return; }
+  btn.disabled = true;
+  setStatus(statusEl, 'Thinking of replies...', '');
+  outputEl.innerHTML = '';
+  try{
+    const prompt = `You are a social media community manager helping a gaming creator reply to comments in a warm, genuine, natural way that keeps the conversation going. Suggest exactly 3 short reply options with slightly different tones: 1) Appreciative, 2) Conversational/banter, 3) One that invites further discussion. Label each option plainly, plain text, no markdown symbols.
+Comment or situation: ${comment}`;
+    const content = await callClaude(prompt, 500);
+    outputEl.innerHTML = `<div class="ai-output">${escapeHtml(content)}</div>`;
+    setStatus(statusEl, '', '');
+  }catch(e){
+    console.error('Reply generation failed:', e);
+    setStatus(statusEl, e.message || 'Something went wrong.', 'err');
+  }
+  btn.disabled = false;
+}
+
+async function generateStarters(){
+  const btn = document.getElementById('comments-starter-btn');
+  const statusEl = document.getElementById('comments-starter-status');
+  const outputEl = document.getElementById('comments-starter-output');
+  const topic = document.getElementById('comments-starter-topic').value.trim();
+  btn.disabled = true;
+  setStatus(statusEl, 'Generating questions...', '');
+  outputEl.innerHTML = '';
+  try{
+    const prompt = `Generate exactly 5 short, simple conversation-starter questions a gaming content creator (eFootball, Ghost of Tsushima, PUBG) could post to invite comments and engagement from their community. Number them 1 to 5. Plain text, no markdown symbols.
+Topic focus: ${topic || 'general, related to the creator\'s usual gaming content'}`;
+    const content = await callClaude(prompt, 400);
+    outputEl.innerHTML = `<div class="ai-output">${escapeHtml(content)}</div>`;
+    setStatus(statusEl, '', '');
+  }catch(e){
+    console.error('Starter generation failed:', e);
+    setStatus(statusEl, e.message || 'Something went wrong.', 'err');
+  }
+  btn.disabled = false;
+}
+
+/* ---------------- Monetize ---------------- */
+async function generateMonetizeAdvice(){
+  const btn = document.getElementById('monetize-btn');
+  const statusEl = document.getElementById('monetize-status');
+  const outputEl = document.getElementById('monetize-output');
+  const desc = document.getElementById('monetize-input').value.trim();
+  if(!desc){ setStatus(statusEl, 'Please describe your situation first.', 'err'); return; }
+  btn.disabled = true;
+  setStatus(statusEl, 'Thinking it through...', '');
+  outputEl.innerHTML = '';
+  try{
+    const prompt = `You are a monetization advisor for gaming content creators across Facebook, Instagram and TikTok. Based on the creator's content style, posting frequency, and audience size described below, recommend which 1-2 monetization paths to prioritize first, explain briefly why, and give 2-3 concrete next steps. Be honest that eligibility requirements and payouts vary by platform and region and change over time — advise checking each platform's official creator dashboard for current numbers. Plain text, no markdown symbols.
+Their situation: ${desc}`;
+    const content = await callClaude(prompt, 600);
+    outputEl.innerHTML = `<div class="ai-output">${escapeHtml(content)}</div>`;
+    setStatus(statusEl, '', '');
+  }catch(e){
+    console.error('Monetize advice failed:', e);
+    setStatus(statusEl, e.message || 'Something went wrong.', 'err');
+  }
+  btn.disabled = false;
+}
+
+/* ---------------- Go Live ---------------- */
+async function generateLiveScript(){
+  const btn = document.getElementById('live-generate-btn');
+  const statusEl = document.getElementById('live-status');
+  const outputEl = document.getElementById('live-output');
+  const topic = document.getElementById('live-topic').value.trim();
+  const duration = document.getElementById('live-duration').value;
+  const tone = document.getElementById('live-tone').value;
+  const durationLabel = {short:'about 10-15 minutes', medium:'about 15-30 minutes', long:'30 minutes or more'}[duration];
+  btn.disabled = true;
+  setStatus(statusEl, 'Building your live script...', '');
+  outputEl.innerHTML = '';
+  document.getElementById('live-actions').style.display = 'none';
+  try{
+    const prompt = `You are a livestreaming coach helping a solo gaming creator (eFootball, Ghost of Tsushima, PUBG) run a confident livestream. Build a script sized for a stream lasting ${durationLabel}, broken into segments with rough time ranges adding up to roughly that total length. Plain text, no markdown symbols, with these exact labeled sections:
+TITLE: (a short name for this stream)
+HOOK: (what to say in the first 30 seconds to stop people scrolling past)
+OPENING: (first 1-2 minutes, welcoming viewers, including a line to greet latecomers as they join)
+TALKING POINTS: (3-5 segments, each starting with a time range like "2-5 min:")
+ENGAGEMENT PROMPTS: (2-3 specific things to ask viewers to get them commenting)
+CLOSING: (how to wrap up, thank viewers, clear call to action)
+Stream topic: ${topic || '(no specific topic, suggest something fitting)'}
+Tone: ${tone}`;
+    const content = await callClaude(prompt, 900);
+    window._liveResult = content;
+    outputEl.innerHTML = `<div class="ai-output">${escapeHtml(content)}</div>`;
+    document.getElementById('live-actions').style.display = 'flex';
+    setStatus(statusEl, '', '');
+  }catch(e){
+    console.error('Live script generation failed:', e);
+    setStatus(statusEl, e.message || 'Something went wrong.', 'err');
+  }
+  btn.disabled = false;
+}
+function copyLiveOutput(){
+  if(window._liveResult) navigator.clipboard.writeText(window._liveResult);
+}
+async function saveLiveToBoard(evt){
+  const topic = document.getElementById('live-topic').value.trim() || 'Livestream';
+  posts.push({
+    id: uid(),
+    title: topic,
+    game: 'pubg',
+    platform: 'facebook',
+    format: 'Live',
+    status: 'draft',
+    date: new Date().toISOString().slice(0,10),
+    caption: '',
+    notes: window._liveResult || '',
+    metrics: {likes:0,comments:0,shares:0,views:0}
+  });
+  await savePostsToStorage();
+  renderAll();
+  const b = evt.target;
+  const original = b.textContent;
+  b.textContent = 'Added ✓';
+  setTimeout(()=>{ b.textContent = original; }, 1500);
+}
+
+function renderAll(){
+  renderTicker();
+  renderDashboard();
+  renderCalendar();
+  renderBoard();
+  renderTracker();
+}
+
+loadPosts();
+loadAISettings();
+loadPageStats();
+</script>
+</body>
+</html>
